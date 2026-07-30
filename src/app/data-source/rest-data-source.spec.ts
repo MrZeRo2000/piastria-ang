@@ -3,12 +3,12 @@ import {TestBed} from '@angular/core/testing';
 import {RestUrl, RestUrlEnv} from '../config/configuration';
 import {environment} from '../../environments/environment';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 describe('RestDataSource', () => {
   beforeEach(() => TestBed.configureTestingModule({
     imports: [],
-    providers: [RestDataSource, RestUrlEnv, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+    providers: [RestDataSource, RestUrlEnv, provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
 }));
 
   let instance: RestDataSource;

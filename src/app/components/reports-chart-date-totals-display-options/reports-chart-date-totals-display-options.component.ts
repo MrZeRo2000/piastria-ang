@@ -1,4 +1,4 @@
-import {Component, inject, input, OnInit} from '@angular/core';
+import {Component, inject, input, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {outputFromObservable} from '@angular/core/rxjs-interop';
 import {map, tap} from 'rxjs';
 import {FormBuilder, ReactiveFormsModule} from '@angular/forms';
@@ -57,6 +57,7 @@ export class ReportsChartDateTotalsDisplayOptions {
       MatIconModule,
       MatRadioModule
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./reports-chart-date-totals-display-options.component.scss']
 })
 export class ReportsChartDateTotalsDisplayOptionsComponent implements OnInit {

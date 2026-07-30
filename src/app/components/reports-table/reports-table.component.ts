@@ -1,4 +1,4 @@
-import {Component, input} from '@angular/core';
+import {Component, input, ChangeDetectionStrategy} from '@angular/core';
 import {Payment} from '../../model/payment';
 import {ReportsTableDisplayOptions} from '../reports-table-display-options/reports-table-display-options.component';
 import {AmountPipe} from "../../core/pipes/amount.pipe";
@@ -13,6 +13,7 @@ import {MatTableModule} from "@angular/material/table";
     DatePipe,
     MatTableModule
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./reports-table.component.scss']
 })
 export class ReportsTableComponent {

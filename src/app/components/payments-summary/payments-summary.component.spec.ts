@@ -6,7 +6,7 @@ import {RestUrlEnv} from '../../config/configuration';
 import {RestDataSource} from '../../data-source/rest-data-source';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import {IterableDiffers} from '@angular/core';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 describe('PaymentsSummaryComponent', () => {
   let component: PaymentsSummaryComponent;
@@ -15,7 +15,7 @@ describe('PaymentsSummaryComponent', () => {
   beforeEach(async() => {
     await TestBed.configureTestingModule({
     imports: [PaymentsSummaryComponent],
-    providers: [RestUrlEnv, RestDataSource, IterableDiffers, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+    providers: [RestUrlEnv, RestDataSource, IterableDiffers, provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
 })
     .compileComponents();
   });

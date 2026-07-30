@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AppInfoComponent } from './components/app-info/app-info.component';
 import { NavTopComponent } from './components/nav-top/nav-top.component';
@@ -8,6 +8,7 @@ import { BackupDatabaseButtonComponent } from './components/backup-database-butt
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     RouterOutlet,
     AppInfoComponent,

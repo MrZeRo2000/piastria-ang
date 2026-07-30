@@ -1,4 +1,4 @@
-import {Component, computed, inject} from '@angular/core';
+import {Component, computed, inject, ChangeDetectionStrategy} from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {BackupDatabaseInfo} from '../../model/backup-database-info';
 import {CommonTableComponent, CommonTableConfig} from '../../core/table/common-table-component';
@@ -14,6 +14,7 @@ import {BACKUP_DATABASE_CRUD_REPOSITORY, BACKUP_INFO_READ_REPOSITORY} from '../.
     MatButtonModule,
     LoadingProgressComponent
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./backup-database.component.scss']
 })
 export class BackupDatabaseComponent extends CommonTableComponent<BackupDatabaseInfo> {

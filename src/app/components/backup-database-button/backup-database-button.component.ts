@@ -1,4 +1,4 @@
-import {Component, computed, inject} from '@angular/core';
+import {Component, computed, inject, ChangeDetectionStrategy} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {tap} from 'rxjs';
 import {DateFormatter} from "../../core/utils/date-formatter";
@@ -18,6 +18,7 @@ import {BACKUP_DATABASE_CRUD_REPOSITORY, BACKUP_INFO_READ_REPOSITORY} from "../.
     MatIconModule,
     MatTooltipModule
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./backup-database-button.component.scss']
 })
 export class BackupDatabaseButtonComponent {

@@ -1,4 +1,4 @@
-import {Component, effect, input, Signal, signal} from '@angular/core';
+import {Component, effect, input, Signal, signal, ChangeDetectionStrategy} from '@angular/core';
 import {MatMenuModule} from "@angular/material/menu";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
@@ -81,6 +81,7 @@ export class PaymentsTableDisplayOptions {
     MatSlideToggleModule,
     MatDividerModule
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./payments-table-display-options.component.scss']
 })
 export class PaymentsTableDisplayOptionsComponent {

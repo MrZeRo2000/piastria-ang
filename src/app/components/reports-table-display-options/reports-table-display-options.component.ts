@@ -1,4 +1,4 @@
-import {Component, inject, input, OnInit} from '@angular/core';
+import {Component, inject, input, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {outputFromObservable} from '@angular/core/rxjs-interop';
 import {map, tap} from 'rxjs';
 import {FormBuilder, ReactiveFormsModule} from '@angular/forms';
@@ -64,6 +64,7 @@ export class ReportsTableDisplayOptions {
     MatSlideToggleModule,
     MatDividerModule
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./reports-table-display-options.component.scss']
 })
 export class ReportsTableDisplayOptionsComponent implements OnInit {

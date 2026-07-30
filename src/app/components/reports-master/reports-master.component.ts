@@ -1,4 +1,4 @@
-import {Component, computed, effect, inject, signal, untracked} from '@angular/core';
+import {Component, computed, effect, inject, signal, untracked, ChangeDetectionStrategy} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ActivatedRoute} from '@angular/router';
 import { HttpParams } from '@angular/common/http';
@@ -54,6 +54,7 @@ enum ControlTab {
     provideNativeDateAdapter(APP_DATE_FORMATS),
     {provide: DateAdapter, useClass: AppDateAdapter},
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./reports-master.component.scss']
 })
 export default class ReportsMasterComponent extends CommonTableComponent<PaymentRep> {

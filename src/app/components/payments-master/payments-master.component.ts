@@ -1,4 +1,4 @@
-import {Component, computed, inject, signal} from '@angular/core';
+import {Component, computed, inject, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {CommonTableComponent} from '../../core/table/common-table-component';
 import {PaymentObjectTotals} from '../../model/payment-object-totals';
@@ -19,6 +19,7 @@ import {PAYMENT_OBJECT_PERIOD_READ_REPOSITORY} from "../../repository/repository
     LoadingProgressComponent,
     PaymentsTableComponent
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./payments-master.component.scss']
 })
 export class PaymentsMasterComponent extends CommonTableComponent<PaymentObjectTotals> {

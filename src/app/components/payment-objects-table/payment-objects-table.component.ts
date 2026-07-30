@@ -1,4 +1,4 @@
-import {Component, effect, ElementRef, inject, viewChild} from '@angular/core';
+import {Component, effect, ElementRef, inject, viewChild, ChangeDetectionStrategy} from '@angular/core';
 import {PaymentObject} from '../../model/payment-object';
 import {
   FormBuilder,
@@ -44,6 +44,7 @@ import {MatMenuItem} from "@angular/material/menu";
     LoadingProgressComponent,
     MatMenuItem
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./payment-objects-table.component.scss']
 })
 export class PaymentObjectsTableComponent extends CommonSimpleEditableTableComponent<PaymentObject> {

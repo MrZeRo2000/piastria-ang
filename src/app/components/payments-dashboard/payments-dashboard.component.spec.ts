@@ -6,7 +6,7 @@ import {RestDataSource} from '../../data-source/rest-data-source';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import {ReactiveFormsModule} from '@angular/forms';
 import {RouterTestingModule} from '@angular/router/testing';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 describe('PaymentsDashboardComponent', () => {
   let component: PaymentsDashboardComponent;
@@ -15,7 +15,7 @@ describe('PaymentsDashboardComponent', () => {
   beforeEach(async() => {
     await TestBed.configureTestingModule({
     imports: [PaymentsDashboardComponent, RouterTestingModule, ReactiveFormsModule],
-    providers: [RestUrlEnv, RestDataSource, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+    providers: [RestUrlEnv, RestDataSource, provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
 })
     .compileComponents();
   });

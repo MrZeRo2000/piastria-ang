@@ -1,4 +1,4 @@
-import {Component, computed, effect, ElementRef, inject, input, signal, viewChildren} from '@angular/core';
+import {Component, computed, effect, ElementRef, inject, input, signal, viewChildren, ChangeDetectionStrategy} from '@angular/core';
 import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {tap} from 'rxjs';
 import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
@@ -71,6 +71,7 @@ enum InlineControl {
     LoadingProgressComponent
   ],
   providers: [AmountPipe],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./payments-table.component.scss']
 })
 export class PaymentsTableComponent extends CommonEditableTableComponent<PaymentRefs, Payment> {

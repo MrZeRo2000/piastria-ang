@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {MatIconModule} from "@angular/material/icon";
 
 @Component({
@@ -7,6 +7,7 @@ import {MatIconModule} from "@angular/material/icon";
   imports: [
     MatIconModule
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./drag-grip.component.scss']
 })
 export class DragGripComponent {

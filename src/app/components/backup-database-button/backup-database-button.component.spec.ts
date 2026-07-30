@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BackupDatabaseButtonComponent } from './backup-database-button.component';
 import {RestUrlEnv} from "../../config/configuration";
 import {RestDataSource} from "../../data-source/rest-data-source";
-import {provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
+import {provideHttpClient, withInterceptorsFromDi, withXhr} from "@angular/common/http";
 import {provideHttpClientTesting} from "@angular/common/http/testing";
 
 describe('BackupDatabaseButtonComponent', () => {
@@ -13,7 +13,7 @@ describe('BackupDatabaseButtonComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [BackupDatabaseButtonComponent],
-      providers: [RestUrlEnv, RestDataSource, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      providers: [RestUrlEnv, RestDataSource, provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
     });
     fixture = TestBed.createComponent(BackupDatabaseButtonComponent);
     component = fixture.componentInstance;

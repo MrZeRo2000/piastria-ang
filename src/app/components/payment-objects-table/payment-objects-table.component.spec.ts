@@ -5,7 +5,7 @@ import {RestDataSource} from '../../data-source/rest-data-source';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import {RestUrlEnv} from '../../config/configuration';
 import {ReactiveFormsModule} from '@angular/forms';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 describe('PaymentObjectsTableComponent', () => {
   let component: PaymentObjectsTableComponent;
@@ -14,7 +14,7 @@ describe('PaymentObjectsTableComponent', () => {
   beforeEach(async() => {
     await TestBed.configureTestingModule({
     imports: [PaymentObjectsTableComponent, ReactiveFormsModule],
-    providers: [RestUrlEnv, RestDataSource, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+    providers: [RestUrlEnv, RestDataSource, provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
 })
     .compileComponents();
   });

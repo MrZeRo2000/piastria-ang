@@ -1,4 +1,4 @@
-import {Component, effect, ElementRef, inject, viewChild} from '@angular/core';
+import {Component, effect, ElementRef, inject, viewChild, ChangeDetectionStrategy} from '@angular/core';
 import {Product} from '../../model/product';
 import {
   FormBuilder,
@@ -43,6 +43,7 @@ import {PRODUCT_CRUD_REPOSITORY, PRODUCT_READ_REPOSITORY} from '../../repository
       LoadingProgressComponent,
       MatMenuItem
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./products-table.component.scss']
 })
 export class ProductsTableComponent extends CommonSimpleEditableTableComponent<Product> {

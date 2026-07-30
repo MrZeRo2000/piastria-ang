@@ -1,4 +1,4 @@
-import {Component, input, output} from '@angular/core';
+import {Component, input, output, ChangeDetectionStrategy} from '@angular/core';
 import {MatListModule} from '@angular/material/list';
 
 /**
@@ -10,6 +10,7 @@ import {MatListModule} from '@angular/material/list';
   selector: 'app-core-nav-list-selector',
   templateUrl: './nav-list-selector.component.html',
   imports: [MatListModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./nav-list-selector.component.scss']
 })
 export class NavListSelectorComponent {

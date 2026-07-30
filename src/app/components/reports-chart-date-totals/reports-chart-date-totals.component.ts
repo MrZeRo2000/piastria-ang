@@ -7,7 +7,8 @@ import {
   HostListener,
   input,
   viewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {Payment} from '../../model/payment';
 
@@ -29,6 +30,7 @@ import {NgStyle} from "@angular/common";
   imports: [
     NgStyle
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./reports-chart-date-totals.component.scss']
 })
 export class ReportsChartDateTotalsComponent implements AfterViewInit {

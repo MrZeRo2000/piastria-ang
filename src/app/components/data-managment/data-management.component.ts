@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {BackupDatabaseComponent} from "../backup-database/backup-database.component";
 import {UpdatePaymentGroupComponent} from "../update-payment-group/update-payment-group.component";
 
@@ -9,6 +9,7 @@ import {UpdatePaymentGroupComponent} from "../update-payment-group/update-paymen
     BackupDatabaseComponent,
     UpdatePaymentGroupComponent
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./data-management.component.scss']
 })
 export class DataManagementComponent {

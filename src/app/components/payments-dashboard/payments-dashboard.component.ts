@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import {Router} from '@angular/router';
 import {CommonTableComponent} from '../../core/table/common-table-component';
 import {PaymentObjectTotals} from '../../model/payment-object-totals';
@@ -25,6 +25,7 @@ import {PAYMENT_OBJECT_TOTALS_READ_REPOSITORY} from "../../repository/repository
     AmountPipe,
     LoadingProgressComponent
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./payments-dashboard.component.scss']
 })
 export class PaymentsDashboardComponent extends CommonTableComponent<PaymentObjectTotals> {

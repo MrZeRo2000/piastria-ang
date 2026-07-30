@@ -1,4 +1,4 @@
-import {Component, input} from '@angular/core';
+import {Component, input, ChangeDetectionStrategy} from '@angular/core';
 
 export enum ColorScheme {
   NONE,
@@ -8,6 +8,7 @@ export enum ColorScheme {
 @Component({
   selector: 'app-core-colored-value-label',
   templateUrl: './colored-value-label.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./colored-value-label.component.scss']
 })
 export class ColoredValueLabelComponent {

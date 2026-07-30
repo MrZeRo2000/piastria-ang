@@ -251,11 +251,11 @@
           appInputPasteFloatControl
           [errorStateMatcher]="errorMatcher"
           >
-        @if (prevPeriodPayment()?.productCounter !== undefined) {
+        @if ($safeNavigationMigration(prevPeriodPayment()?.productCounter) !== undefined) {
           <mat-hint>
             Prev:
-            <a href="#" (click)="pervPeriodCounterLabelClick($event, prevPeriodPayment()?.productCounter)">
-              <app-core-colored-value-label [value]="prevPeriodPayment()?.productCounter | amount: selectedProduct()?.counterPrecision"></app-core-colored-value-label>
+            <a href="#" (click)="pervPeriodCounterLabelClick($event, $safeNavigationMigration(prevPeriodPayment()?.productCounter))">
+              <app-core-colored-value-label [value]="$safeNavigationMigration(prevPeriodPayment()?.productCounter) | amount: $safeNavigationMigration(selectedProduct()?.counterPrecision)"></app-core-colored-value-label>
             </a>
           </mat-hint>
         }
@@ -282,8 +282,8 @@
         appInputPasteFloatControl
         [errorStateMatcher]="errorMatcher"
         >
-      @if (prevPeriodPayment()?.paymentAmount !== undefined) {
-        <mat-hint>Prev: <app-core-colored-value-label [value]="prevPeriodPayment()?.paymentAmount"></app-core-colored-value-label></mat-hint>
+      @if ($safeNavigationMigration(prevPeriodPayment()?.paymentAmount) !== undefined) {
+        <mat-hint>Prev: <app-core-colored-value-label [value]="$safeNavigationMigration(prevPeriodPayment()?.paymentAmount)"></app-core-colored-value-label></mat-hint>
       }
       @if (editForm.controls.paymentAmount.errors?.required) {
         <mat-error>Payment amount should not be empty</mat-error>
@@ -301,8 +301,8 @@
         formControlName="commissionAmount"
         appInputPasteFloatControl
         >
-      @if (prevPeriodPayment()?.commissionAmount !== undefined) {
-        <mat-hint>Prev: <app-core-colored-value-label [value]="prevPeriodPayment()?.commissionAmount | amount"></app-core-colored-value-label></mat-hint>
+      @if ($safeNavigationMigration(prevPeriodPayment()?.commissionAmount) !== undefined) {
+        <mat-hint>Prev: <app-core-colored-value-label [value]="$safeNavigationMigration(prevPeriodPayment()?.commissionAmount) | amount"></app-core-colored-value-label></mat-hint>
       }
     </mat-form-field>
 

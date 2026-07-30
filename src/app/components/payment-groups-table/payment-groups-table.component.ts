@@ -1,4 +1,4 @@
-import {Component, computed, effect, ElementRef, inject, signal, viewChild} from '@angular/core';
+import {Component, computed, effect, ElementRef, inject, signal, viewChild, ChangeDetectionStrategy} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {PaymentGroup} from '../../model/payment-group';
 import {
@@ -46,6 +46,7 @@ import {MatMenuItem} from "@angular/material/menu";
     LoadingProgressComponent,
     MatMenuItem
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./payment-groups-table.component.scss']
 })
 export class PaymentGroupsTableComponent extends CommonSimpleEditableTableComponent<PaymentGroup> {

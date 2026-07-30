@@ -1,9 +1,10 @@
-import {Component, input, output} from '@angular/core';
+import {Component, input, output, ChangeDetectionStrategy} from '@angular/core';
 import {SelectableItem} from '../../model/selectable-item';
 
 @Component({
     selector: 'app-core-selectable-panel',
     templateUrl: './core-selectable-panel.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./core-selectable-panel.component.scss']
 })
 export class CoreSelectablePanelComponent <T> {

@@ -1,4 +1,4 @@
-import {Component, computed, inject, input} from '@angular/core';
+import {Component, computed, inject, input, ChangeDetectionStrategy} from '@angular/core';
 import {PaymentGroupAmountSummary} from '../../model/payment-group-amount-summary';
 import {Payment} from '../../model/payment';
 import {PaymentGroup} from '../../model/payment-group';
@@ -16,6 +16,7 @@ import {PaymentsTableDisplayOptions} from "../payments-table-display-options/pay
     MatCardModule,
     MatTableModule
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./payments-summary.component.scss']
 })
 export class PaymentsSummaryComponent {

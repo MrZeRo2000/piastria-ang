@@ -1,4 +1,4 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {APP_INFO_READ_REPOSITORY} from "../../repository/repository-tokens";
 import {AsyncPipe} from "@angular/common";
@@ -8,6 +8,7 @@ import {shareReplay} from "rxjs";
   selector: 'app-app-info',
   templateUrl: './app-info.component.html',
   styleUrls: ['./app-info.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     AsyncPipe
   ]

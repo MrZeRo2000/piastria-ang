@@ -1,4 +1,4 @@
-import {Component, computed, inject, input, OnInit, output, signal} from '@angular/core';
+import {Component, computed, inject, input, OnInit, output, signal, ChangeDetectionStrategy} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormBuilder, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {DateRangeGenerator, PeriodInfo} from '../../core/utils/date-range-generator';
@@ -18,6 +18,7 @@ import {MatSelectModule} from "@angular/material/select";
     MatFormFieldModule,
     MatSelectModule
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./payments-date-selection.component.scss']
 })
 export class PaymentsDateSelectionComponent implements OnInit {
