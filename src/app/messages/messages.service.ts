@@ -14,14 +14,14 @@ export class MessagesService {
   /** The most recently reported message (undefined when reset). */
   readonly lastMessage = this.lastMessageSignal.asReadonly();
 
-  reportMessage(message: Message): void {
-    this.messages.push(message);
+  reportMessage(message: Message | undefined): void {
     this.lastMessageSignal.set(message);
 
     // Show the message as a Material snackbar (like the reference project).
     // Done at report-time so it never depends on which panel is mounted.
-    // resetMessage() passes undefined -> nothing to show.
+    // resetMessage() passes undefined -> nothing to show, and nothing recorded.
     if (message) {
+      this.messages.push(message);
       this.snackBar.open(message.messageText, '', {
         duration: message.messageType === MessageType.MT_ERROR ? 7000 : 4000,
         panelClass: this.panelClass(message.messageType),

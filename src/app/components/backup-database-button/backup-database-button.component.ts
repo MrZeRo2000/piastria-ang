@@ -1,4 +1,4 @@
-import {Component, computed, inject, ChangeDetectionStrategy} from '@angular/core';
+import {Component, computed, inject} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {tap} from 'rxjs';
 import {DateFormatter} from "../../core/utils/date-formatter";
@@ -18,7 +18,6 @@ import {BACKUP_DATABASE_CRUD_REPOSITORY, BACKUP_INFO_READ_REPOSITORY} from "../.
     MatIconModule,
     MatTooltipModule
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./backup-database-button.component.scss']
 })
 export class BackupDatabaseButtonComponent {
@@ -29,7 +28,7 @@ export class BackupDatabaseButtonComponent {
   // Last-backup info shown in the tooltip. It's read from the shared, root-provided
   // BACKUP_INFO_READ_REPOSITORY so this button and the data-management page render the
   // same cached value: the info is fetched once (loadDataOnce in the constructor) and
-  // only re-fetched after a backup runs — never once-per-observer.
+  // only re-fetched after a backup runs â€” never once-per-observer.
   backupTooltip = computed(() => {
     const info = this.backupInfoRepository.dataSignal()[0];
     if (info?.lastBackupDateTime) {

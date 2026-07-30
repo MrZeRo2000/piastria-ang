@@ -7,20 +7,20 @@ describe('TimePeriod', () => {
 
   it('parsing from string: 1 Q', () => {
     const instance = TimePeriod.fromString('1Q');
-    expect(instance.periodType).toBe(TimePeriodType.Q)
-    expect(instance.quantity).toBe(1)
+    expect(instance!.periodType).toBe(TimePeriodType.Q)
+    expect(instance!.quantity).toBe(1)
   });
 
   it('parsing from wrong string', () => {
     const instance = TimePeriod.fromString('1X');
-    expect(instance.periodType).toBeNull();
-    expect(instance.quantity).toBeNull()
+    expect(instance!.periodType).toBeNull();
+    expect(instance!.quantity).toBeNull()
   });
 
   it('parsing from string without quantity', () => {
     const instance = TimePeriod.fromString('M');
-    expect(instance.periodType).toBe(TimePeriodType.M)
-    expect(instance.quantity).toBe(1)
+    expect(instance!.periodType).toBe(TimePeriodType.M)
+    expect(instance!.quantity).toBe(1)
   });
 
   it('parsing from null string', () => {

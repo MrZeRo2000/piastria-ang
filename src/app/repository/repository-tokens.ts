@@ -20,29 +20,35 @@ import {RowsAffectedResult} from "../model/rows-affected-result";
  * Links each payment to its previous-period counterpart and builds the
  * prevProductPayments lookup (previously done in PaymentRefsRepository.afterLoadData).
  */
-function mapPaymentRefs(raw: PaymentRefs): PaymentRefs {
-  const refs = raw ?? new PaymentRefs();
-  refs.prevProductPayments = new Map<number, Payment>();
+function mapPaymentRefs(raw: unknown): PaymentRefs {
+  const refs = (raw as PaymentRefs) ?? new PaymentRefs();
+  // Captured in a local so TS keeps it narrowed to a definite Map (not
+  // `Map | undefined`) inside the forEach closures below.
+  const prevProductPayments = new Map<number, Payment>();
+  refs.prevProductPayments = prevProductPayments;
   const prevPeriodPayments = refs.prevPeriodPaymentList;
   if (prevPeriodPayments) {
     (refs.paymentList ?? []).forEach(payment => {
-      payment.prevPeriodPayment = prevPeriodPayments.find(value => value.product.id === payment.product.id);
-      // title for delete
-      payment["name"] = `${payment.paymentGroup?.name} \u2192 ${payment.paymentObject.name}`;
+      payment.prevPeriodPayment = prevPeriodPayments.find(value => value.product?.id === payment.product?.id);
+      // title for delete; Payment has no declared 'name' field, this is a
+      // display-only property read by the generic delete-confirmation dialog.
+      (payment as unknown as Record<string, unknown>)['name'] = `${payment.paymentGroup?.name} \u2192 ${payment.paymentObject?.name}`;
     });
-    prevPeriodPayments.forEach(prev => refs.prevProductPayments.set(prev.product.id, prev));
+    // product/id are always populated on a persisted payment.
+    prevPeriodPayments.forEach(prev => prevProductPayments.set(prev.product!.id!, prev));
   }
   return refs;
 }
 
 /** Converts each report payment's periodDate string to a Date. */
-function mapPaymentRep(raw: PaymentRep): PaymentRep {
-  raw?.paymentRepList?.forEach(payment => {
+function mapPaymentRep(raw: unknown): PaymentRep {
+  const rep = raw as PaymentRep;
+  rep?.paymentRepList?.forEach(payment => {
     if (payment.periodDate) {
       payment.periodDate = new Date(payment.periodDate);
     }
   });
-  return raw;
+  return rep;
 }
 
 

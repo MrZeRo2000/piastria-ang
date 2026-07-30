@@ -1,16 +1,17 @@
-@if (value() !== null) {
+@let v = value();
+@if (v !== null && v !== undefined) {
   <span
     class="trend"
-    [class.trend-up]="value() > 0"
-    [class.trend-down]="value() < 0"
+    [class.trend-up]="v > 0"
+    [class.trend-down]="v < 0"
     >
-    @if (value() > 0) {
+    @if (v > 0) {
       <mat-icon>arrow_drop_up</mat-icon>
     }
-    @if (value() < 0) {
+    @if (v < 0) {
       <mat-icon>arrow_drop_down</mat-icon>
     }
-    @if (value() === 0) {
+    @if (v === 0) {
       <mat-icon>remove</mat-icon>
     }
   </span>

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatMenuModule} from "@angular/material/menu";
@@ -11,7 +11,6 @@ import {MatMenuModule} from "@angular/material/menu";
     MatIconModule,
     MatMenuModule
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./drop-down-more-menu.component.scss']
 })
 export class DropDownMoreMenuComponent {

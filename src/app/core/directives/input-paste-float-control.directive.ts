@@ -9,11 +9,11 @@ export class InputPasteFloatControlDirective {
   private control = inject(NgControl)
 
   @HostListener('paste', ['$event'])
-  onPaste(event) {
+  onPaste(event: ClipboardEvent) {
     const parsedValue = ClipboardNumberConverter.getConverted(event);
     if (!isNaN(parsedValue)) {
       event.preventDefault();
-      this.control?.control.setValue(parsedValue);
+      this.control?.control?.setValue(parsedValue);
     }
   }
 }

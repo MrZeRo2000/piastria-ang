@@ -1,4 +1,5 @@
 import {computed, DestroyRef, Directive, inject, OnInit, signal} from '@angular/core';
+import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {MatDialog} from '@angular/material/dialog';
 import {EditMode, EditState} from '../edit/edit-state';
 import {CommonEntity} from '../entity/common-entity';
@@ -11,7 +12,7 @@ import {CrudActionType, CrudRepository, CrudStatus} from "../repository/crud-rep
 import {takeUntilDestroyed, toSignal} from "@angular/core/rxjs-interop";
 
 @Directive()
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
+ 
 export abstract class CommonEditableTableComponent<R, W
   extends CommonEntity> extends CommonTableComponent<R>
   implements OnInit {
@@ -68,17 +69,18 @@ export abstract class CommonEditableTableComponent<R, W
     // this version gives empty strings instead of no value
     // return Object.assign({}, this.editForm.value);
 
-    const v = this.editForm.value;
-    const d: any = {};
+    const v: Record<string, unknown> = this.editForm.value;
+    const d: Record<string, unknown> = {};
     Object.keys(v).forEach(c => {if (v[c] !== '') {d[c] = v[c]; }});
-    return d;
+    return d as unknown as W;
   }
 
-  protected getEditValue(item: any): any {
-    const value = {};
+  protected getEditValue(item: Record<string, unknown>): Record<string, unknown> {
+    const value: Record<string, unknown> = {};
     Object.keys(item).forEach(v => {
-      if (item.hasOwnProperty(v) && (item[v] || item[v] === 0)) {
-        value[v] = item[v].id || item[v];
+      const itemValue = item[v];
+      if (Object.prototype.hasOwnProperty.call(item, v) && (itemValue || itemValue === 0)) {
+        value[v] = (itemValue as {id?: unknown} | undefined)?.id || itemValue;
       }
     });
     return value;
@@ -99,13 +101,13 @@ export abstract class CommonEditableTableComponent<R, W
   onEditClick(item: W): void {
     console.log(`Editing item: ${JSON.stringify(item)}`);
     this.editStateSignal.set(new EditState<W>(EditMode.EM_EDIT, item))
-    this.editForm.patchValue(this.getEditValue(item));
+    this.editForm.patchValue(this.getEditValue(item as unknown as Record<string, unknown>));
   }
 
   onDeleteClick(item: W): void {
-    const o: any = item
-    if (o.hasOwnProperty('name')) {
-      const name = o['name'];
+    const o = item as unknown as Record<string, unknown>;
+    if (Object.prototype.hasOwnProperty.call(o, 'name')) {
+      const name = o['name'] as string;
       const message = '<strong>' + name + '</strong> will be deleted. <BR>Are you sure?';
       this.dialog.open(ConfirmationModalDialogComponent, {data: {message}, minWidth: '450px'})
         .afterClosed()
@@ -129,7 +131,7 @@ export abstract class CommonEditableTableComponent<R, W
       const persistData = this.getPersistData();
       console.log(`PersistData: ${JSON.stringify(persistData)}`);
 
-      switch(this.editStateSignal().editMode) {
+      switch(this.editStateSignal()?.editMode) {
         case EditMode.EM_CREATE:
           this.crudRepository.execute({type: CrudActionType.Insert, payload: this.getPersistData()});
           break
@@ -146,7 +148,7 @@ export abstract class CommonEditableTableComponent<R, W
     this.editForm.reset()
   }
 
-  onDrop(event: any): void {
+  onDrop(event: CdkDragDrop<unknown>): void {
     const fromEntity = this.readRepository.dataSignal()[event.previousIndex] as CommonEntity;
     const toEntity = this.readRepository.dataSignal()[event.currentIndex] as CommonEntity;
 
@@ -165,7 +167,7 @@ export abstract class CommonEditableTableComponent<R, W
 }
 
 @Directive()
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
+ 
 export abstract class CommonSimpleEditableTableComponent<T extends CommonEntity> extends CommonEditableTableComponent<T, T> {
 
   protected constructor(

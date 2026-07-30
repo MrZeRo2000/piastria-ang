@@ -1,4 +1,4 @@
-import {Component, input, ChangeDetectionStrategy} from '@angular/core';
+import {Component, input} from '@angular/core';
 import {LoadingSpinnerElementComponent} from "../loading-spinner-element/loading-spinner-element.component";
 
 @Component({
@@ -7,7 +7,6 @@ import {LoadingSpinnerElementComponent} from "../loading-spinner-element/loading
   imports: [
     LoadingSpinnerElementComponent
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./loading-progress.component.scss']
 })
 export class LoadingProgressComponent {

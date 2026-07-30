@@ -2,8 +2,10 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import packageJson from '../../package.json';
+
 export const environment = {
-  VERSION: require('../../package.json').version,
+  VERSION: packageJson.version,
   production: false,
   restUrl: 'http://localhost:3579/ide_rainments_wss_war/'
 };

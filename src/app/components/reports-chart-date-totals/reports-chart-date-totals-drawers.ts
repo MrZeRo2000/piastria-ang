@@ -1,3 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any --
+ * D3 selection/scale chains (content/svg/tooltip below) carry datum types that
+ * shift across .append()/.selectAll()/.data()/.join() calls in ways D3's own
+ * generics can't express without a chain-specific type for every drawer; `any`
+ * here matches how these same selections are already typed one level up in
+ * ReportsChartDateTotalsComponent (svg/contentGroup/g). */
 import * as d3 from 'd3';
 import {ScaleBand} from 'd3';
 import {AmountPipe} from '../../core/pipes/amount.pipe';
@@ -84,10 +90,10 @@ abstract class AbstractBarChartDrawer implements IDrawer {
       .data(this.data?.paymentColorsTotals)
       .enter()
       .append('text')
-      .text(d => d.amount > 0 ? AbstractBarChartDrawer.amountPipe.transform(d.amount) : null)
+      .text((d: PaymentColorsTotal) => d.amount > 0 ? AbstractBarChartDrawer.amountPipe.transform(d.amount) : null)
       .attr('text-anchor', 'middle')
-      .attr('x', d => xScale(DateFormatter.formatDateShortMonthYear(d.periodDate)) + xScale.bandwidth() / 2)
-      .attr('y', d => yScale(this.getLabelY(d)) + this.getLabelParams().yOffset)
+      .attr('x', (d: PaymentColorsTotal) => xScale(DateFormatter.formatDateShortMonthYear(d.periodDate))! + xScale.bandwidth() / 2)
+      .attr('y', (d: PaymentColorsTotal) => yScale(this.getLabelY(d)) + this.getLabelParams().yOffset)
       .attr('font-family', 'sans-serif')
       .attr('font-size', '11px')
       .attr('fill', this.getLabelParams().color)
@@ -99,14 +105,14 @@ abstract class AbstractBarChartDrawer implements IDrawer {
       .select<SVGGElement>('#labels')
       .selectAll('text')
       .transition().ease(d3.easePolyInOut).duration(500)
-      .attr('x', d => xScale(DateFormatter.formatDateShortMonthYear((d as PaymentColorsTotal).periodDate)) + xScale.bandwidth() / 2)
+      .attr('x', d => xScale(DateFormatter.formatDateShortMonthYear((d as PaymentColorsTotal).periodDate))! + xScale.bandwidth() / 2)
       .attr('y', d => yScale(this.getLabelY(d as PaymentColorsTotal)) +
         this.getLabelParams().yOffset)
       .attr('fill', this.getLabelParams().color);
   }
 
   getMaxY(): number {
-    return d3.max(this.data?.paymentColorsTotals, d => d.amount) * 1.05 as number;
+    return d3.max(this.data?.paymentColorsTotals, d => d.amount)! * 1.05 as number;
   }
 
   getLabelY(d: PaymentColorsTotal): number {
@@ -115,16 +121,16 @@ abstract class AbstractBarChartDrawer implements IDrawer {
 }
 
 export class BarChartDrawer extends AbstractBarChartDrawer {
-  drawBars(content: any, xScale: ScaleBand<any>, yScale: d3.ScaleLinear<number, number>, tooltip: any): void {
+  drawBars(content: any, xScale: ScaleBand<any>, yScale: d3.ScaleLinear<number, number>, _tooltip: any): void {
     content.append('g')
       .attr('id', 'bar')
       .attr('fill', 'steelblue')
       .selectAll('rect')
       .data(this.data?.paymentColorsTotals)
       .join('rect')
-      .attr('x', d => xScale(DateFormatter.formatDateShortMonthYear(d.periodDate)))
-      .attr('y', d => yScale(d.amount))
-      .attr('height', d => yScale(0) - yScale(d.amount))
+      .attr('x', (d: PaymentColorsTotal) => xScale(DateFormatter.formatDateShortMonthYear(d.periodDate)))
+      .attr('y', (d: PaymentColorsTotal) => yScale(d.amount))
+      .attr('height', (d: PaymentColorsTotal) => yScale(0) - yScale(d.amount))
       .attr('width', xScale.bandwidth())
       ;
   }
@@ -132,9 +138,9 @@ export class BarChartDrawer extends AbstractBarChartDrawer {
   drawTransitionBars(svg: any, xScale: ScaleBand<any>, yScale: d3.ScaleLinear<number, number>): void {
     svg.selectAll('rect')
       .transition().ease(d3.easePolyInOut).duration(500)
-      .attr('x', d => xScale(DateFormatter.formatDateShortMonthYear((d as PaymentColorsTotal).periodDate)))
-      .attr('y', d => yScale((d as PaymentColorsTotal).amount))
-      .attr('height', d => yScale(0) - yScale((d as PaymentColorsTotal).amount))
+      .attr('x', (d: PaymentColorsTotal) => xScale(DateFormatter.formatDateShortMonthYear((d as PaymentColorsTotal).periodDate)))
+      .attr('y', (d: PaymentColorsTotal) => yScale((d as PaymentColorsTotal).amount))
+      .attr('height', (d: PaymentColorsTotal) => yScale(0) - yScale((d as PaymentColorsTotal).amount))
       .attr('width', xScale.bandwidth());
   }
 
@@ -166,9 +172,9 @@ export class StackedBarChartDrawer extends AbstractBarChartDrawer {
         .selectAll('rect')
         .data(chartData)
         .join('rect')
-        .attr('x', d => xScale(DateFormatter.formatDateShortMonthYear(d.periodDate)))
-        .attr('y', d => yScale(d.colorAmounts[0].nextAmount))
-        .attr('height', d => yScale(color_index == 0 ? 0 : -2) - yScale(d.colorAmounts[0].amount))
+        .attr('x', (d: PaymentColorsTotal) => xScale(DateFormatter.formatDateShortMonthYear(d.periodDate)))
+        .attr('y', (d: PaymentColorsTotal) => yScale(d.colorAmounts[0].nextAmount))
+        .attr('height', (d: PaymentColorsTotal) => yScale(color_index == 0 ? 0 : -2) - yScale(d.colorAmounts[0].amount))
         .attr('width', xScale.bandwidth())
         .call(AbstractBarChartDrawer.attachTooltip, tooltip);
 
@@ -180,10 +186,10 @@ export class StackedBarChartDrawer extends AbstractBarChartDrawer {
       svg.select(`#bar${color_index}`)
         .selectAll('rect')
         .transition().ease(d3.easePolyInOut).duration(500)
-        .attr('x', d => xScale(DateFormatter.formatDateShortMonthYear((d as PaymentColorsTotal).periodDate)))
+        .attr('x', (d: PaymentColorsTotal) => xScale(DateFormatter.formatDateShortMonthYear((d as PaymentColorsTotal).periodDate)))
         .attr('width', xScale.bandwidth())
-        .attr('y', d => yScale((d as PaymentColorsTotal).colorAmounts[0].nextAmount))
-        .attr('height', d => yScale(color_index == 0 ? 0 : -2) - yScale((d as PaymentColorsTotal).colorAmounts[0].amount))
+        .attr('y', (d: PaymentColorsTotal) => yScale((d as PaymentColorsTotal).colorAmounts[0].nextAmount))
+        .attr('height', (d: PaymentColorsTotal) => yScale(color_index == 0 ? 0 : -2) - yScale((d as PaymentColorsTotal).colorAmounts[0].amount))
       ;
     });
   }
@@ -218,9 +224,9 @@ export class SideBySideBarChartDrawer extends AbstractBarChartDrawer {
         .selectAll('rect')
         .data(chartData)
         .join('rect')
-        .attr('x', d => xScale(DateFormatter.formatDateShortMonthYear(d.periodDate)) + color_index * barWidth)
-        .attr('y', d => yScale(d.colorAmounts[0].amount))
-        .attr('height', d => yScale(0) - yScale(d.colorAmounts[0].amount))
+        .attr('x', (d: PaymentColorsTotal) => xScale(DateFormatter.formatDateShortMonthYear(d.periodDate))! + color_index * barWidth)
+        .attr('y', (d: PaymentColorsTotal) => yScale(d.colorAmounts[0].amount))
+        .attr('height', (d: PaymentColorsTotal) => yScale(0) - yScale(d.colorAmounts[0].amount))
         .attr('width', barWidth)
         .call(AbstractBarChartDrawer.attachTooltip, tooltip);
     });
@@ -233,10 +239,10 @@ export class SideBySideBarChartDrawer extends AbstractBarChartDrawer {
       svg.select(`#bar${color_index}`)
         .selectAll('rect')
         .transition().ease(d3.easePolyInOut).duration(500)
-        .attr('x', d => xScale(DateFormatter.formatDateShortMonthYear((d as PaymentColorsTotal).periodDate)) + color_index * barWidth)
+        .attr('x', (d: PaymentColorsTotal) => xScale(DateFormatter.formatDateShortMonthYear((d as PaymentColorsTotal).periodDate))! + color_index * barWidth)
         .attr('width', barWidth)
-        .attr('y', d => yScale((d as PaymentColorsTotal).colorAmounts[0].amount))
-        .attr('height', d => yScale(0) - yScale((d as PaymentColorsTotal).colorAmounts[0].amount))
+        .attr('y', (d: PaymentColorsTotal) => yScale((d as PaymentColorsTotal).colorAmounts[0].amount))
+        .attr('height', (d: PaymentColorsTotal) => yScale(0) - yScale((d as PaymentColorsTotal).colorAmounts[0].amount))
       ;
     });
   }
@@ -249,10 +255,10 @@ export class SideBySideBarChartDrawer extends AbstractBarChartDrawer {
   }
 
   getMaxY(): number {
-    return d3.max([].concat(...this.data.paymentColorsTotals.map(v => v.colorAmounts.map(v => v.amount))));
+    return d3.max(([] as number[]).concat(...this.data.paymentColorsTotals.map(v => v.colorAmounts.map(v => v.amount))))!;
   }
 
   getLabelY(d: PaymentColorsTotal): number {
-    return d3.max((d.colorAmounts as Array<ColorAmount>).map(v => v.amount));
+    return d3.max((d.colorAmounts as Array<ColorAmount>).map(v => v.amount))!;
   }
 }

@@ -1,7 +1,7 @@
 @if (value() || displayZero()) {
   <span class="value-label"
-        [class.value-label--positive]="colorScheme() === colorSchemeType.POS_GREEN_NEG_RED && value() >= 0"
-        [class.value-label--negative]="colorScheme() === colorSchemeType.POS_GREEN_NEG_RED && value() < 0">
+        [class.value-label--positive]="colorScheme() === colorSchemeType.POS_GREEN_NEG_RED && (numericValue() ?? 0) >= 0"
+        [class.value-label--negative]="colorScheme() === colorSchemeType.POS_GREEN_NEG_RED && (numericValue() ?? 0) < 0">
     {{value()}}
   </span>
 }

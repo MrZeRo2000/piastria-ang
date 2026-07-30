@@ -6,13 +6,16 @@ export enum TimePeriodType {
 }
 
 export class TimePeriod {
-  public static fromString(text: string): TimePeriod {
+  public static fromString(text: string | null | undefined): TimePeriod | null {
     if (text) {
       const parsedString = text.match(/(\d+)?(\w)/);
+      if (!parsedString) {
+        return null;
+      }
 
-      const periodType = TimePeriodType[parsedString[2]] || null;
+      const periodType = TimePeriodType[parsedString[2] as keyof typeof TimePeriodType] ?? null;
 
-      let quantity: number = null;
+      let quantity: number | null = null;
       if (periodType) {
         quantity = Number.parseInt(parsedString[1], 10) || 1;
       }
@@ -23,24 +26,23 @@ export class TimePeriod {
     }
   }
 
-  constructor(readonly periodType: TimePeriodType, readonly quantity: number = 1) {
+  constructor(readonly periodType: TimePeriodType | null | undefined, readonly quantity: number | null = 1) {
     this.periodType = periodType;
     this.quantity = quantity;
   }
 
   public toString(): string {
-    let result = this.quantity? this.quantity.toString(10): '1';
-
-    if (this.periodType) {
-      result = result + this.periodType.toString();
+    if (!this.periodType) {
+      return '';
     }
 
-    return result.length > 0 && this.periodType && result;
+    const quantityPart = this.quantity ? this.quantity.toString(10) : '1';
+    return quantityPart + this.periodType.toString();
   }
 }
 
 export class TimePeriodUtils {
-  public static truncateToPeriod(date: Date, periodType: TimePeriodType): Date {
+  public static truncateToPeriod(date: Date, periodType: TimePeriodType): Date | null {
     switch (periodType) {
       case TimePeriodType.M:
         return new Date(date.getFullYear(), date.getMonth(), 1);
@@ -52,13 +54,14 @@ export class TimePeriodUtils {
   }
 
   public static addPeriod(date: Date, timePeriod: TimePeriod): Date {
+    const quantity = timePeriod.quantity ?? 1;
     switch (timePeriod.periodType) {
       case TimePeriodType.D:
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate() + timePeriod.quantity);
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate() + quantity);
       case TimePeriodType.M:
-        return new Date(date.getFullYear(), date.getMonth() + timePeriod.quantity, date.getDate());
+        return new Date(date.getFullYear(), date.getMonth() + quantity, date.getDate());
       case TimePeriodType.Q:
-        return new Date(date.getFullYear(), date.getMonth() + 3 * timePeriod.quantity, date.getDate());
+        return new Date(date.getFullYear(), date.getMonth() + 3 * quantity, date.getDate());
       default:
         return date;
     }

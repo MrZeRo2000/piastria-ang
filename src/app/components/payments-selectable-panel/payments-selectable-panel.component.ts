@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
 import {CoreSelectablePanelComponent} from '../../core/components/core-selectable-panel/core-selectable-panel.component';
 import {Payment} from '../../model/payment';
 import {MatButtonModule} from "@angular/material/button";
@@ -13,7 +13,6 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     MatIconModule,
     MatTooltipModule
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./payments-selectable-panel.component.scss']
 })
 export class PaymentsSelectablePanelComponent extends CoreSelectablePanelComponent<Payment> {

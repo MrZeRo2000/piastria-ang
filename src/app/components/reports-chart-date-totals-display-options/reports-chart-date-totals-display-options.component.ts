@@ -1,4 +1,4 @@
-import {Component, inject, input, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {Component, inject, input, OnInit} from '@angular/core';
 import {outputFromObservable} from '@angular/core/rxjs-interop';
 import {map, tap} from 'rxjs';
 import {FormBuilder, ReactiveFormsModule} from '@angular/forms';
@@ -16,16 +16,16 @@ export enum ChartStyle {
 export class ReportsChartDateTotalsDisplayOptions {
   static KEY = 'reportsChartDateTotalsDisplayOptions';
 
-  public chartStyle: string;
+  public chartStyle!: string;
 
-  public static fromLocalStorage(paymentObjectId: number): ReportsChartDateTotalsDisplayOptions {
+  public static fromLocalStorage(paymentObjectId: number | undefined): ReportsChartDateTotalsDisplayOptions {
     const instance = new ReportsChartDateTotalsDisplayOptions();
     instance.loadFromLocalStorage(paymentObjectId);
 
     return instance;
   }
 
-  public saveToLocalStorage(paymentObjectId: number): void {
+  public saveToLocalStorage(paymentObjectId: number | undefined): void {
     localStorage.setItem(`${ReportsChartDateTotalsDisplayOptions.KEY}${paymentObjectId}`, JSON.stringify(this));
   }
 
@@ -33,14 +33,14 @@ export class ReportsChartDateTotalsDisplayOptions {
     this.chartStyle = ChartStyle.BarChart;
   }
 
-  public loadFromLocalStorage(paymentObjectId: number): void {
+  public loadFromLocalStorage(paymentObjectId: number | undefined): void {
     const localItem = localStorage.getItem(`${ReportsChartDateTotalsDisplayOptions.KEY}${paymentObjectId}`);
     this.loadDefaults();
     if (localItem !== null) {
       try {
         const localObject = JSON.parse(localItem);
         this.chartStyle = localObject.chartStyle;
-      } catch (e) {
+      } catch {
         this.loadDefaults();
       }
     }
@@ -57,7 +57,6 @@ export class ReportsChartDateTotalsDisplayOptions {
       MatIconModule,
       MatRadioModule
     ],
-    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./reports-chart-date-totals-display-options.component.scss']
 })
 export class ReportsChartDateTotalsDisplayOptionsComponent implements OnInit {
@@ -67,7 +66,7 @@ export class ReportsChartDateTotalsDisplayOptionsComponent implements OnInit {
 
   paymentObjectId = input<number>();
 
-  displayOptions: ReportsChartDateTotalsDisplayOptions;
+  displayOptions!: ReportsChartDateTotalsDisplayOptions;
 
   displayOptionsForm = this.fb.group({
     chartStyle: this.fb.control<string | null>(null)

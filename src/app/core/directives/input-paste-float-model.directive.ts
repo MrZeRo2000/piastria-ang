@@ -13,12 +13,12 @@ export class InputPasteFloatModelDirective {
    * @param event with clipboard data
    */
   @HostListener('paste', ['$event'])
-  onPaste(event) {
+  onPaste(event: ClipboardEvent) {
     const convertedValue = ClipboardNumberConverter.getConverted(event);
     if (!isNaN(convertedValue)) {
       event.preventDefault();
       this.model.viewToModelUpdate(convertedValue);
-      this.model.valueAccessor.writeValue(convertedValue);
+      this.model.valueAccessor?.writeValue(convertedValue);
     }
   }
 }

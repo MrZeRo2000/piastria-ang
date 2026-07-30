@@ -1,11 +1,11 @@
 <span class="selectable-panel">
   @if (!isAllSelected()) {
-    <button matIconButton (click)="onCheckAllClick($event)" matTooltip="Select all" aria-label="Select all">
+    <button matIconButton (click)="onCheckAllClick()" matTooltip="Select all" aria-label="Select all">
       <mat-icon>done_all</mat-icon>
     </button>
   }
   @if (isAnySelected()) {
-    <button matIconButton (click)="onClearAllClick($event)" matTooltip="Clear all" aria-label="Clear all">
+    <button matIconButton (click)="onClearAllClick()" matTooltip="Clear all" aria-label="Clear all">
       <mat-icon>clear</mat-icon>
     </button>
   }

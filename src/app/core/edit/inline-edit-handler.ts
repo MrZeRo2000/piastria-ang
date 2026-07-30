@@ -11,8 +11,8 @@ export class InlineEditHandler<T> {
   readonly value = signal<string>('');
   readonly active = signal(false);
 
-  inputValidator: (item: T, controlName: string, value: string) => boolean;
-  inputProcessor: (item: T, controlName: string, value: string) => void;
+  inputValidator: (item: T, controlName: string, value: string) => boolean = () => true;
+  inputProcessor: (item: T, controlName: string, value: string) => void = () => {};
 
   start(item: T, controlName: string, initialValue: string): void {
     this.selectedItem.set(item);
@@ -21,12 +21,12 @@ export class InlineEditHandler<T> {
     this.active.set(true);
   }
 
-  refOnClick(event: any): void {
+  refOnClick(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
   }
 
-  controlOnClick(event: any): void {
+  controlOnClick(event: Event): void {
     event.stopPropagation();
   }
 
@@ -34,12 +34,12 @@ export class InlineEditHandler<T> {
     this.active.set(false);
   }
 
-  keyUp(event: any, item: T): void {
+  keyUp(event: KeyboardEvent, item: T): void {
     if (event.key === 'Escape') {
       this.active.set(false);
     } else if (event.key === 'Enter') {
-      if (!this.inputValidator || this.inputValidator(item, this.controlName(), this.value())) {
-        this.inputProcessor?.(item, this.controlName(), this.value());
+      if (!this.inputValidator || this.inputValidator(item, this.controlName() ?? '', this.value())) {
+        this.inputProcessor?.(item, this.controlName() ?? '', this.value());
         this.active.set(false);
       }
     }

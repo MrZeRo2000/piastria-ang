@@ -8,15 +8,14 @@ import * as d3 from 'd3';
 describe('PaymentsColorUtils', () => {
   const paymentObject1 = new PaymentObject(1, 'Object 1');
 
-  const paymentGroup1 = new PaymentGroup(1, 'Group 1', null, '#ff0000');
-  const paymentGroup2 = new PaymentGroup(2, 'Group 2', null, '#00ff00');
+  const paymentGroup1 = new PaymentGroup(1, 'Group 1', undefined, '#ff0000');
+  const paymentGroup2 = new PaymentGroup(2, 'Group 2', undefined, '#00ff00');
   const paymentGroup3 = new PaymentGroup(3, 'Group 3');
   const paymentGroup4 = new PaymentGroup(4, 'Group 4');
 
   const product1 = new Product(1, 'Product 1');
   const product12 = new Product(12, 'Product 12');
   const product2 = new Product(2, 'Product 2');
-  const product21 = new Product(21, 'Product 21');
   const product3 = new Product(3, 'Product 3');
   const product4 = new Product(4, 'Product 4');
 
@@ -64,10 +63,9 @@ describe('PaymentsColorUtils', () => {
     expect(result.paymentColorsTotals[0].colorAmounts[2].prevAmount).toBe(12.5+0.3+3.2+0.1+2.5+0.1);
     expect(result.paymentColorsTotals[0].colorAmounts[2].nextAmount).toBe(12.5+0.3+3.2+0.1+2.5+0.1);
 
-    expect(Math.max(...[].concat(...result.paymentColorsTotals.map(v => v.colorAmounts.map(v => v.amount))))).toBe(12.5+0.3+3.2+0.1)
+    expect(Math.max(...([] as number[]).concat(...result.paymentColorsTotals.map(v => v.colorAmounts.map(v => v.amount))))).toBe(12.5+0.3+3.2+0.1)
 
-    const d3 = require('d3');
-    expect(d3.max([].concat(...result.paymentColorsTotals.map(v => v.colorAmounts.map(v => v.amount))))).toBe(12.5+0.3+3.2+0.1);
+    expect(d3.max(([] as number[]).concat(...result.paymentColorsTotals.map(v => v.colorAmounts.map(v => v.amount))))).toBe(12.5+0.3+3.2+0.1);
 
   });
 

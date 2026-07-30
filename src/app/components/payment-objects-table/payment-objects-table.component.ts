@@ -1,4 +1,4 @@
-import {Component, effect, ElementRef, inject, viewChild, ChangeDetectionStrategy} from '@angular/core';
+import {Component, effect, ElementRef, inject, viewChild} from '@angular/core';
 import {PaymentObject} from '../../model/payment-object';
 import {
   FormBuilder,
@@ -10,7 +10,7 @@ import {DragHandlerService} from '../../core/services/drag-handler.service';
 import {TimePeriod, TimePeriodType} from '../../core/utils/time-period';
 import {AddPanelComponent} from "../../core/components/add-panel/add-panel.component";
 import {DropDownMoreMenuComponent} from "../../core/components/drop-down-more-menu/drop-down-more-menu.component";
-import {CdkDrag, CdkDragHandle, CdkDropList} from "@angular/cdk/drag-drop";
+import {CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList} from "@angular/cdk/drag-drop";
 import {MatTableModule} from "@angular/material/table";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
@@ -44,7 +44,6 @@ import {MatMenuItem} from "@angular/material/menu";
     LoadingProgressComponent,
     MatMenuItem
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./payment-objects-table.component.scss']
 })
 export class PaymentObjectsTableComponent extends CommonSimpleEditableTableComponent<PaymentObject> {
@@ -82,9 +81,9 @@ export class PaymentObjectsTableComponent extends CommonSimpleEditableTableCompo
     {validators: termValidator()});
 
   protected getPersistData(): PaymentObject {
-    const o: any = super.getPersistData();
+    const o = super.getPersistData() as unknown as Record<string, unknown>;
 
-    const termPeriod = new TimePeriod(o.termType, o.termQuantity);
+    const termPeriod = new TimePeriod(o.termType as TimePeriodType, o.termQuantity as number);
 
     delete o.termQuantity;
     delete o.termPeriod;
@@ -93,13 +92,13 @@ export class PaymentObjectsTableComponent extends CommonSimpleEditableTableCompo
       o.term = termPeriod.toString();
     }
 
-    return o;
+    return o as unknown as PaymentObject;
   }
 
-  protected getEditValue(item: any): any {
+  protected getEditValue(item: Record<string, unknown>): Record<string, unknown> {
     const value = super.getEditValue(item);
 
-    const termPeriod = TimePeriod.fromString(value.term);
+    const termPeriod = TimePeriod.fromString(value.term as string);
     delete value.term;
 
     if (termPeriod) {
@@ -110,7 +109,7 @@ export class PaymentObjectsTableComponent extends CommonSimpleEditableTableCompo
     return value;
   }
 
-  onDrop(event: any): void {
+  onDrop(event: CdkDragDrop<unknown>): void {
     this.dragHandlerService.stopDrag();
     super.onDrop(event);
   }

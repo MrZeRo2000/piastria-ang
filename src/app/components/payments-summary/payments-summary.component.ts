@@ -1,4 +1,4 @@
-import {Component, computed, inject, input, ChangeDetectionStrategy} from '@angular/core';
+import {Component, computed, inject, input} from '@angular/core';
 import {PaymentGroupAmountSummary} from '../../model/payment-group-amount-summary';
 import {Payment} from '../../model/payment';
 import {PaymentGroup} from '../../model/payment-group';
@@ -16,7 +16,6 @@ import {PaymentsTableDisplayOptions} from "../payments-table-display-options/pay
     MatCardModule,
     MatTableModule
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./payments-summary.component.scss']
 })
 export class PaymentsSummaryComponent {
@@ -36,19 +35,22 @@ export class PaymentsSummaryComponent {
     const groups: Array<PaymentGroupAmountSummary> = [];
 
     payments.forEach(payment => {
-      if (payment.paymentGroup) {
-        const group = groups.find(value => value.paymentGroup.id === payment.paymentGroup.id);
+      const paymentAmount = payment.paymentAmount ?? 0;
+      const commissionAmount = payment.commissionAmount ?? 0;
+      const paymentGroup = payment.paymentGroup;
+      if (paymentGroup) {
+        const group = groups.find(value => value.paymentGroup.id === paymentGroup.id);
         if (group === undefined) {
-          groups.push(new PaymentGroupAmountSummary(payment.paymentGroup, payment.paymentAmount, payment.commissionAmount));
+          groups.push(new PaymentGroupAmountSummary(paymentGroup, paymentAmount, commissionAmount));
         } else {
-          group.addAmounts(payment.paymentAmount, payment.commissionAmount);
+          group.addAmounts(paymentAmount, commissionAmount);
         }
       }
 
-      total.addAmounts(payment.paymentAmount, payment.commissionAmount);
+      total.addAmounts(paymentAmount, commissionAmount);
 
       if (selected.indexOf(payment) > -1) {
-        selectedSummary.addAmounts(payment.paymentAmount, payment.commissionAmount);
+        selectedSummary.addAmounts(paymentAmount, commissionAmount);
       }
     });
 

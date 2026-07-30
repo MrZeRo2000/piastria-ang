@@ -1,4 +1,4 @@
-import {Component, computed, inject, input, OnInit, output, signal, ChangeDetectionStrategy} from '@angular/core';
+import {Component, computed, inject, input, OnInit, output, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormBuilder, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {DateRangeGenerator, PeriodInfo} from '../../core/utils/date-range-generator';
@@ -18,7 +18,6 @@ import {MatSelectModule} from "@angular/material/select";
     MatFormFieldModule,
     MatSelectModule
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./payments-date-selection.component.scss']
 })
 export class PaymentsDateSelectionComponent implements OnInit {
@@ -45,12 +44,14 @@ export class PaymentsDateSelectionComponent implements OnInit {
 
   readonly selectedFirstDate = computed(() => {
     const dr = this.dr();
-    return !!dr && dr.addPeriod(this.lastSelectedDate(), -1) < this.minSelectionDate;
+    // dr is always constructed with a handled period ('M'/'Q'), so addPeriod
+    // never actually returns null here.
+    return !!dr && dr.addPeriod(this.lastSelectedDate(), -1)! < this.minSelectionDate;
   });
 
   readonly selectedLastDate = computed(() => {
     const dr = this.dr();
-    return !!dr && dr.addPeriod(this.lastSelectedDate(), 1) > this.maxSelectionDate;
+    return !!dr && dr.addPeriod(this.lastSelectedDate(), 1)! > this.maxSelectionDate;
   });
 
   constructor() {
@@ -62,7 +63,7 @@ export class PaymentsDateSelectionComponent implements OnInit {
     this.editForm.valueChanges.pipe(takeUntilDestroyed()).subscribe(v => {
       const dr = this.dr();
       if (this.period() && dr && v.yearSelect != null && v.periodSelect != null) {
-        this.emitSelectedDate(dr.getPeriodDate(v.yearSelect, v.periodSelect));
+        this.emitSelectedDate(dr.getPeriodDate(v.yearSelect, v.periodSelect)!);
       }
     });
   }
@@ -80,7 +81,7 @@ export class PaymentsDateSelectionComponent implements OnInit {
       return;
     }
     if ((value > 0 && !this.selectedLastDate()) || (value < 0 && !this.selectedFirstDate())) {
-      const newDate = dr.addPeriod(this.lastSelectedDate(), value);
+      const newDate = dr.addPeriod(this.lastSelectedDate(), value)!;
       this.emitSelectedDate(newDate);
       this.editForm.patchValue({periodSelect: dr.getPeriodValue(newDate), yearSelect: newDate.getFullYear()});
     }

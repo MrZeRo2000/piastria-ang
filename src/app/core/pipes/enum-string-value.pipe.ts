@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class EnumStringValuePipe implements PipeTransform {
 
-  transform(enumStringClass: any): string[] {
+  transform(enumStringClass: Record<string, string>): string[] {
     return Object.keys(enumStringClass).map(value => enumStringClass[value]);
   }
 

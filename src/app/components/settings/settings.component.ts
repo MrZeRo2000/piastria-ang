@@ -1,4 +1,4 @@
-import {Component, inject, signal, ChangeDetectionStrategy} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {MessagesService} from '../../messages/messages.service';
 import {NavListSelectorComponent} from "../../core/components/nav-list-selector/nav-list-selector.component";
 import {PaymentObjectsTableComponent} from "../payment-objects-table/payment-objects-table.component";
@@ -21,7 +21,6 @@ export enum SettingItemEnum {
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NavListSelectorComponent,
     PaymentObjectsTableComponent,

@@ -1,4 +1,4 @@
-import {Component, input, output, ChangeDetectionStrategy} from '@angular/core';
+import {Component, input, output} from '@angular/core';
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 
@@ -9,21 +9,20 @@ import {MatIconModule} from "@angular/material/icon";
     MatButtonModule,
     MatIconModule
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./edit-delete-panel.component.scss']
 })
-export class EditDeletePanelComponent {
+export class EditDeletePanelComponent<T> {
 
-  item = input<any>();
+  item = input<T>();
 
-  deleteClick = output<any>();
-  editClick = output<any>();
+  deleteClick = output<T>();
+  editClick = output<T>();
 
-  onDeleteClick(item): void {
+  onDeleteClick(item: T): void {
     this.deleteClick.emit(item);
   }
 
-  onEditClick(item): void {
+  onEditClick(item: T): void {
     this.editClick.emit(item);
   }
 

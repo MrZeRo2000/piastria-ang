@@ -46,27 +46,29 @@ export interface PaymentColorsResult {
 export class PaymentsColorUtils {
   static calcPaymentColorsTotals(payments: Array<Payment>): PaymentColorsResult {
 
-    const groupAmount: any = {} as GroupAmount;
+    const groupAmount: GroupAmount = {} as GroupAmount;
     const periodDates = new Set<number>();
 
     payments.forEach(p => {
-      if (!periodDates.has(p.periodDate.getTime())) {
-        periodDates.add(p.periodDate.getTime());
+      const periodDate = p.periodDate ?? new Date(0);
+      if (!periodDates.has(periodDate.getTime())) {
+        periodDates.add(periodDate.getTime());
       }
-      const groupKey: GroupKey = {periodDate: p.periodDate, color: p.paymentGroup?.color || ''}
+      const groupKey: GroupKey = {periodDate, color: p.paymentGroup?.color || ''}
       const groupKeyStr = JSON.stringify(groupKey);
+      const amount = (p.paymentAmount ?? 0) + (p.commissionAmount ?? 0);
       if (groupAmount[groupKeyStr]) {
-        groupAmount[groupKeyStr] += p.paymentAmount + p.commissionAmount;
+        groupAmount[groupKeyStr] += amount;
       } else {
-        groupAmount[groupKeyStr] = p.paymentAmount + p.commissionAmount;
+        groupAmount[groupKeyStr] = amount;
       }
     });
 
     const colorNames: ColorNames = [
-      ...new Set(payments.map(v => (JSON.stringify({color:v.paymentGroup.color || '', name: v.paymentGroup.name}))))
+      ...new Set(payments.map(v => (JSON.stringify({color:v.paymentGroup?.color || '', name: v.paymentGroup?.name}))))
     ]
       .map(v => JSON.parse(v))
-      .reduce((a,v) => {if (!!a[v.color]) {a[v.color] = a[v.color] + ',' + v.name} else {a[v.color] = v.name;} return a;}, {})
+      .reduce((a,v) => {if (a[v.color]) {a[v.color] = a[v.color] + ',' + v.name} else {a[v.color] = v.name;} return a;}, {})
 
     //[...new Set(payments.map(v => ({color:v.paymentGroup.color || '', name: v.paymentGroup.name})))].reduce((a,v) => {if (!!a[v.color]) {a[v.color] = a[v.color] + ',' + v.name} else {a[v.color] = v.name;} return a;}, {})
 
@@ -116,7 +118,7 @@ export class PaymentsColorUtils {
 
     const paymentColorsTotals: Array<PaymentColorsTotal> = new Array<PaymentColorsTotal>();
 
-    periodDatesArray.forEach((d, di) => {
+    periodDatesArray.forEach((d) => {
 
       const paymentColorsTotal: PaymentColorsTotal = {periodDate: new Date(d), amount: 0, colorAmounts: []} as PaymentColorsTotal;
 

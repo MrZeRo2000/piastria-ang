@@ -15,8 +15,8 @@ describe('DateRangeGenerator', () => {
     expect(instance).toBeTruthy();
   });
 
-  const months = instanceMonth.getPeriods();
-  const quarters = instanceQuarter.getPeriods();
+  const months = instanceMonth.getPeriods()!;
+  const quarters = instanceQuarter.getPeriods()!;
   const years = instance.getYears();
 
   it('first year', () => {

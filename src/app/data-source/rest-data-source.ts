@@ -13,7 +13,7 @@ export class RestDataSource {
     return this.http.get<T>(this.restUrl + resourceName, { observe: 'response', params });
   }
 
-  postResponse<T>(resourceName: string, body: any, httpParams?: HttpParams, headers?: HttpHeaders): Observable<HttpResponse<T>> {
+  postResponse<T>(resourceName: string, body: unknown, httpParams?: HttpParams, headers?: HttpHeaders): Observable<HttpResponse<T>> {
     return this.http.post<T>(this.restUrl + resourceName, body, { headers, observe: 'response', params: httpParams });
   }
 
@@ -25,15 +25,15 @@ export class RestDataSource {
     return this.http.delete<T>(this.restUrl + resourceName + '/' + id, { observe: 'response' });
   }
 
-  patchResponse<T>(resourceName: string, id: number, body: T): Observable<HttpResponse<T>> {
+  patchResponse<T>(resourceName: string, id: number, body: unknown): Observable<HttpResponse<T>> {
     return this.http.patch<T>(this.restUrl + resourceName + '/' + id, body, { observe: 'response' });
   }
 
-  postFormDataResponse(resourceName: string, formData: FormData): Observable<HttpResponse<any>> {
-    const headers = new HttpHeaders();
-    headers.append('Content-Type', undefined);
-    headers.append('Accept', 'application/json');
+  postFormDataResponse<T>(resourceName: string, formData: FormData): Observable<HttpResponse<T>> {
+    // Don't set Content-Type for FormData: the browser must set it (including the
+    // multipart boundary), so we only add the Accept header.
+    const headers = new HttpHeaders().append('Accept', 'application/json');
 
-    return this.http.post(this.restUrl + resourceName, formData, {headers, observe: 'response'});
+    return this.http.post<T>(this.restUrl + resourceName, formData, {headers, observe: 'response'});
   }
 }

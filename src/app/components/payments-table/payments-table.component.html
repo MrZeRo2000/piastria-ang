@@ -251,11 +251,12 @@
           appInputPasteFloatControl
           [errorStateMatcher]="errorMatcher"
           >
-        @if ($safeNavigationMigration(prevPeriodPayment()?.productCounter) !== undefined) {
+        @let prevProductCounter = prevPeriodPayment()?.productCounter;
+        @if (prevProductCounter !== undefined) {
           <mat-hint>
             Prev:
-            <a href="#" (click)="pervPeriodCounterLabelClick($event, $safeNavigationMigration(prevPeriodPayment()?.productCounter))">
-              <app-core-colored-value-label [value]="$safeNavigationMigration(prevPeriodPayment()?.productCounter) | amount: $safeNavigationMigration(selectedProduct()?.counterPrecision)"></app-core-colored-value-label>
+            <a href="#" (click)="pervPeriodCounterLabelClick($event, prevProductCounter)">
+              <app-core-colored-value-label [value]="prevProductCounter | amount: selectedProduct()?.counterPrecision"></app-core-colored-value-label>
             </a>
           </mat-hint>
         }
@@ -301,8 +302,9 @@
         formControlName="commissionAmount"
         appInputPasteFloatControl
         >
-      @if ($safeNavigationMigration(prevPeriodPayment()?.commissionAmount) !== undefined) {
-        <mat-hint>Prev: <app-core-colored-value-label [value]="$safeNavigationMigration(prevPeriodPayment()?.commissionAmount) | amount"></app-core-colored-value-label></mat-hint>
+      @let prevCommissionAmount = prevPeriodPayment()?.commissionAmount;
+      @if (prevCommissionAmount !== undefined) {
+        <mat-hint>Prev: <app-core-colored-value-label [value]="prevCommissionAmount | amount"></app-core-colored-value-label></mat-hint>
       }
     </mat-form-field>
 

@@ -1,4 +1,4 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component} from '@angular/core';
 import {RouterLink, RouterLinkActive} from '@angular/router';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
@@ -12,7 +12,6 @@ import {MatButtonModule} from '@angular/material/button';
       MatToolbarModule,
       MatButtonModule
     ],
-    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./nav-top.component.scss']
 })
 export class NavTopComponent {

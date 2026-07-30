@@ -28,18 +28,18 @@ class MessageProcessor {
   }
 }
 
-export type ItemMapper<T> = (raw: any) => T;
+export type ItemMapper<T> = (raw: unknown) => T;
 
 /** Mapper that coerces the named fields from ISO date strings to Date. */
 export function withDates<T>(...dateKeys: (keyof T)[]): ItemMapper<T> {
-  return (raw: any) => {
-    const item = {...raw};
+  return (raw: unknown) => {
+    const item = {...(raw as T)};
     for (const key of dateKeys) {
       if (item[key]) {
-        item[key] = new Date(item[key] as string);
+        item[key] = new Date(item[key] as string) as T[typeof key];
       }
     }
-    return item as T;
+    return item;
   };
 }
 
@@ -51,7 +51,7 @@ export class ReadRepository<T> {
     // Per-item transform applied to loaded data; identity by default.
     protected mapItem: ItemMapper<T> = (raw) => raw as T) { }
 
-  private defaultLoadParams: LoadParams = new LoadParams(null, true);
+  private defaultLoadParams: LoadParams = new LoadParams(undefined, true);
 
   loadingSignal = signal(false)
 
@@ -96,7 +96,7 @@ export class ReadRepository<T> {
         })
       )
     ),
-    tap(v => {
+    tap(() => {
       this.loadingSignal.set(false)
       console.log(`Loading signal set to false: end`)
     }),
@@ -109,6 +109,6 @@ export class ReadRepository<T> {
   dataSignal = toSignal(this.loadDataAction$, { initialValue: [] as T[] });
 
   loadData(loadParams?: LoadParams): void {
-    this.loadDataSubject.next(loadParams);
+    this.loadDataSubject.next(loadParams ?? this.defaultLoadParams);
   }
 }

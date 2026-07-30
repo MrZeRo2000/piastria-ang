@@ -19,7 +19,7 @@
 
       @if (rep.paymentRepList.length > 0) {
 
-        @if (selectedGroups() && selectedGroups().length > 0) {
+        @if ((selectedGroups()?.length ?? 0) > 0) {
           <app-drop-down-multi-select
             title="Groups"
             [selectableItems]="selectedGroups()"
@@ -27,7 +27,7 @@
             >
           </app-drop-down-multi-select>
         }
-        @if (selectedProducts() && selectedProducts().length > 0) {
+        @if ((selectedProducts()?.length ?? 0) > 0) {
           <app-drop-down-multi-select
             title="Products"
             [selectableItems]="selectedProducts()"
@@ -39,7 +39,7 @@
           <app-reports-table-display-options
             class="controls-end"
             [reportsTableDisplayOptions]="tableDisplayOptions"
-            (selectionChanged)="tableDisplayOptionsChanged($event)"
+            (selectionChanged)="tableDisplayOptionsChanged()"
             >
           </app-reports-table-display-options>
         }

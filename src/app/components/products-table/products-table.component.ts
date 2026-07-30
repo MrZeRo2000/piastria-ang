@@ -1,4 +1,4 @@
-import {Component, effect, ElementRef, inject, viewChild, ChangeDetectionStrategy} from '@angular/core';
+import {Component, effect, ElementRef, inject, viewChild} from '@angular/core';
 import {Product} from '../../model/product';
 import {
   FormBuilder,
@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import {duplicateNamesValidator, precisionValidator} from '../../core/validators/form-validators';
 import {DragHandlerService} from '../../core/services/drag-handler.service';
-import {CdkDrag, CdkDragHandle, CdkDropList} from '@angular/cdk/drag-drop';
+import {CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList} from '@angular/cdk/drag-drop';
 import {MatTableModule} from '@angular/material/table';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
@@ -43,7 +43,6 @@ import {PRODUCT_CRUD_REPOSITORY, PRODUCT_READ_REPOSITORY} from '../../repository
       LoadingProgressComponent,
       MatMenuItem
     ],
-    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./products-table.component.scss']
 })
 export class ProductsTableComponent extends CommonSimpleEditableTableComponent<Product> {
@@ -75,7 +74,7 @@ export class ProductsTableComponent extends CommonSimpleEditableTableComponent<P
       counterPrecision: ['']},
     {validators: precisionValidator()});
 
-  onDrop(event: any): void {
+  onDrop(event: CdkDragDrop<unknown>): void {
     this.dragHandlerService.stopDrag();
     super.onDrop(event);
   }

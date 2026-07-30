@@ -9,10 +9,10 @@ export class CommonTableConfig {
 }
 
 @Directive()
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
+ 
 export class CommonTableComponent<R> implements OnInit {
   protected config: CommonTableConfig = new CommonTableConfig(true);
-  protected httpParams: HttpParams = null;
+  protected httpParams: HttpParams | undefined = undefined;
 
   repositoryData$ = this.readRepository.loadDataAction$
 

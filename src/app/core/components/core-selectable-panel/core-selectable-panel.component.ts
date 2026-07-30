@@ -1,10 +1,9 @@
-import {Component, input, output, ChangeDetectionStrategy} from '@angular/core';
+import {Component, input, output} from '@angular/core';
 import {SelectableItem} from '../../model/selectable-item';
 
 @Component({
     selector: 'app-core-selectable-panel',
     templateUrl: './core-selectable-panel.component.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./core-selectable-panel.component.scss']
 })
 export class CoreSelectablePanelComponent <T> {
@@ -14,21 +13,21 @@ export class CoreSelectablePanelComponent <T> {
   // Emitted after select-all / clear-all so consumers can react (e.g. re-set a signal).
   selectionChanged = output<Array<SelectableItem<T>>>();
 
-  onCheckAllClick(event): void {
+  onCheckAllClick(): void {
     this.selectableItems()?.forEach(p => p.isSelected = true);
-    this.selectionChanged.emit(this.selectableItems());
+    this.selectionChanged.emit(this.selectableItems() ?? []);
   }
 
-  onClearAllClick(event): void {
+  onClearAllClick(): void {
     this.selectableItems()?.forEach(p => p.isSelected = false);
-    this.selectionChanged.emit(this.selectableItems());
+    this.selectionChanged.emit(this.selectableItems() ?? []);
   }
 
   isAllSelected(): boolean {
-    return SelectableItem.getSelectedCount(this.selectableItems()) == this.selectableItems()?.length;
+    return SelectableItem.getSelectedCount(this.selectableItems() ?? []) === (this.selectableItems()?.length ?? 0);
   }
 
   isAnySelected(): boolean {
-    return this.selectableItems()?.length > 0 && SelectableItem.getSelectedCount(this.selectableItems()) > 0;
+    return (this.selectableItems()?.length ?? 0) > 0 && SelectableItem.getSelectedCount(this.selectableItems() ?? []) > 0;
   }
 }

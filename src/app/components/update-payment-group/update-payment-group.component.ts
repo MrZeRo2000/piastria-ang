@@ -1,4 +1,4 @@
-import {Component, computed, inject, ChangeDetectionStrategy} from '@angular/core';
+import {Component, computed, inject} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {PaymentObjectGroupRefs} from '../../model/payment-object-group-refs';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
@@ -31,7 +31,6 @@ import {
     MatButtonModule,
     LoadingProgressComponent
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./update-payment-group.component.scss']
 })
 export class UpdatePaymentGroupComponent extends CommonTableComponent<PaymentObjectGroupRefs> {
@@ -72,7 +71,7 @@ export class UpdatePaymentGroupComponent extends CommonTableComponent<PaymentObj
   }
 
   // Enable reporting of refs-load errors (updateMessages gates the
-  // ReadRepository's error message → global snackbar).
+  // ReadRepository's error message â†’ global snackbar).
   protected override loadRepositoryData(): void {
     this.readRepository.loadData({updateMessages: true});
   }

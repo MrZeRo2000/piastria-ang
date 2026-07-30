@@ -32,18 +32,18 @@ export type CrudAction<T extends CommonEntity> =
   | { type: CrudActionType.Update; payload: T }
   | { type: CrudActionType.Delete; payload: Pick<T, 'id'> }
   | { type: CrudActionType.Move;   payload: { sourceId: T['id']; targetId: T['id'] } }
-  | { type: CrudActionType.DefaultOrder; payload: {} }
+  | { type: CrudActionType.DefaultOrder; payload: Record<string, never> }
   | { type: CrudActionType.FormData; payload: HttpParams }
-  | { type: CrudActionType.Patch; payload: { id: T['id']; body: any } }
+  | { type: CrudActionType.Patch; payload: { id: T['id']; body: unknown } }
   ;
 
 
 export type CrudSuccessResult<T> = { status: CrudStatus.Success; data: T | null };
-export type CrudErrorResult<T> = { status: CrudStatus.Error; error: any };
+export type CrudErrorResult = { status: CrudStatus.Error; error: unknown };
 
 export type CrudResult<T> =
   | CrudSuccessResult<T>
-  | CrudErrorResult<T>;
+  | CrudErrorResult;
 
 export class CrudRepository<T extends CommonEntity> {
   constructor(
@@ -52,7 +52,7 @@ export class CrudRepository<T extends CommonEntity> {
     protected readonly resourceName: string) { }
 
   loadingSignal = signal(false)
-  private defaultPersistParams: PersistParams;
+  private defaultPersistParams?: PersistParams;
 
   private reportErrorMessage(message: string): void {
     const workMessageSource = this.defaultPersistParams && this.defaultPersistParams.messageSource;
@@ -64,18 +64,21 @@ export class CrudRepository<T extends CommonEntity> {
       case CrudActionType.Insert:
         return this.dataSource.postResponse(this.resourceName, action.payload);
       case CrudActionType.Update:
-        return this.dataSource.putResponse(this.resourceName, action.payload.id, action.payload);
+        // id is always populated for an Update payload (an existing entity is
+        // being edited); T['id'] is only optional to allow Omit<T, 'id'> for Insert.
+        return this.dataSource.putResponse(this.resourceName, action.payload.id!, action.payload);
       case CrudActionType.Delete:
-        return this.dataSource.deleteResponse(this.resourceName, action.payload.id);
-      case CrudActionType.Move:
+        return this.dataSource.deleteResponse(this.resourceName, action.payload.id!);
+      case CrudActionType.Move: {
         const httpParams = new HttpParams()
-          .append('fromId', action.payload.sourceId.toString(10))
-          .append('toId', action.payload.targetId.toString(10));
+          .append('fromId', action.payload.sourceId!.toString(10))
+          .append('toId', action.payload.targetId!.toString(10));
         return this.dataSource.postResponse(
           this.resourceName + '/operation:move_order',
           {},
           httpParams
         )
+      }
       case CrudActionType.DefaultOrder:
         return this.dataSource.postResponse(
           this.resourceName + '/operation:set_default_order',
@@ -84,14 +87,14 @@ export class CrudRepository<T extends CommonEntity> {
       case CrudActionType.FormData:
         return this.dataSource.postResponse(this.resourceName, {}, action.payload)
       case CrudActionType.Patch:
-        return this.dataSource.patchResponse(this.resourceName, action.payload.id, action.payload.body)
+        return this.dataSource.patchResponse(this.resourceName, action.payload.id!, action.payload.body)
     }
   }
 
   private readonly crudSubject = new Subject<CrudAction<T>>();
 
   crudAction$: Observable<CrudResult<T>> = this.crudSubject.asObservable().pipe(
-    tap(action => {
+    tap(() => {
       this.loadingSignal.set(true)
     }),
     switchMap(action =>
@@ -100,7 +103,7 @@ export class CrudRepository<T extends CommonEntity> {
           iif(
             () => data.ok,
             of({ status: CrudStatus.Success, data: data.body } as CrudSuccessResult<T>),
-            of({ status: CrudStatus.Error, error: data.body } as CrudErrorResult<T>).pipe(
+            of({ status: CrudStatus.Error, error: data.body } as CrudErrorResult).pipe(
               tap(result =>
                 this.reportErrorMessage(`Error processing data: ${result.error}`)
               )
@@ -112,7 +115,7 @@ export class CrudRepository<T extends CommonEntity> {
           this.reportErrorMessage(message);
           // Emit an error result (rather than an empty stream) so the trailing
           // tap still runs and resets loadingSignal.
-          return of({ status: CrudStatus.Error, error: message } as CrudErrorResult<T>)
+          return of({ status: CrudStatus.Error, error: message } as CrudErrorResult)
         })
       )
     ),

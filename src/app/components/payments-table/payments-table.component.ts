@@ -1,4 +1,4 @@
-import {Component, computed, effect, ElementRef, inject, input, signal, viewChildren, ChangeDetectionStrategy} from '@angular/core';
+import {Component, computed, effect, ElementRef, inject, input, signal, viewChildren} from '@angular/core';
 import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {tap} from 'rxjs';
 import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
@@ -71,7 +71,6 @@ enum InlineControl {
     LoadingProgressComponent
   ],
   providers: [AmountPipe],
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./payments-table.component.scss']
 })
 export class PaymentsTableComponent extends CommonEditableTableComponent<PaymentRefs, Payment> {
@@ -173,15 +172,16 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
   });
 
   productUsageDisplay = computed(() =>
-    this.amountPipe.transform(this.productUsage(), this.selectedProduct()?.counterPrecision));
+    this.amountPipe.transform(this.productUsage() ?? NaN, this.selectedProduct()?.counterPrecision));
 
-  private static roundValueTo(value: any, precision?: any): number {
+  private static roundValueTo(value: number | string, precision?: number): number {
+    const numericValue = typeof value === 'string' ? Number(value) : value;
     const rate = Math.pow(10, precision || 0);
-    return rate === 0 ? value : Math.round(value * rate) / rate;
+    return rate === 0 ? numericValue : Math.round(numericValue * rate) / rate;
   }
 
-  private static roundValue(value: any): number {
-    return Math.round(value * 100) / 100;
+  private static roundValue(value: number | null): number {
+    return Math.round((value ?? 0) * 100) / 100;
   }
 
   constructor() {
@@ -287,7 +287,7 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
     // Cross-field validations that aren't expressible as pure control validators.
     const editId = this.editStateSignal()?.editItem?.id;
     const productId = Number.parseInt(this.editForm.controls.product.value ?? '', 10);
-    if (this.payments().some(p => p.product.id === productId && p.id !== editId)) {
+    if (this.payments().some(p => p.product?.id === productId && p.id !== editId)) {
       this.editForm.controls.product.setErrors({existingProduct: true});
     }
     const usage = this.productUsage();
@@ -297,14 +297,14 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
     super.onSave();
   }
 
-  private getProductCounter(): number {
+  private getProductCounter(): number | undefined {
     const value = this.editForm.controls.productCounter.value;
     return value != null
-      ? PaymentsTableComponent.roundValueTo(value, this.selectedProduct() && this.selectedProduct().counterPrecision)
-      : null;
+      ? PaymentsTableComponent.roundValueTo(value, this.selectedProduct()?.counterPrecision)
+      : undefined;
   }
 
-  private getPaymentAmount(): number {
+  private getPaymentAmount(): number | null {
     return this.editForm.controls.paymentAmount.value;
   }
 
@@ -313,17 +313,17 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
   }
 
   getPrevPeriodProductCounter(item: Payment): number {
-    return item.prevPeriodPayment && item.prevPeriodPayment.productCounter;
+    return item.prevPeriodPayment?.productCounter as number;
   }
 
-  getPrevPeriodPaymentDiff(item: Payment): number {
-    const prevPeriodValue = item.prevPeriodPayment && item.prevPeriodPayment.paymentAmount;
+  getPrevPeriodPaymentDiff(item: Payment): number | null {
+    const prevPeriodValue = item.prevPeriodPayment?.paymentAmount;
     const currentValue = item.paymentAmount;
     return prevPeriodValue && currentValue ? currentValue - prevPeriodValue : null;
   }
 
-  getPrevPeriodCommissionDiff(item: Payment): number {
-    const prevPeriodValue = item.prevPeriodPayment && item.prevPeriodPayment.commissionAmount;
+  getPrevPeriodCommissionDiff(item: Payment): number | null {
+    const prevPeriodValue = item.prevPeriodPayment?.commissionAmount;
     const currentValue = item.commissionAmount;
     return prevPeriodValue && currentValue ? currentValue - prevPeriodValue : null;
   }
@@ -331,21 +331,21 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
   getPrevPeriodProductCounterDiffByProduct(item: Payment): number {
     const prevPeriodValue = this.getPrevPeriodProductCounter(item);
     const currentValue = item.productCounter;
-    return prevPeriodValue && currentValue ? currentValue - prevPeriodValue : undefined;
+    return (prevPeriodValue && currentValue ? currentValue - prevPeriodValue : undefined) as number;
   }
 
   getPrevPeriodProductCounterEditDiffByProduct(item: Payment): number {
     const prevPeriodValue = this.getPrevPeriodProductCounter(item);
     const inputValue = Number.parseFloat(this.inlineEditHandler.value());
-    return prevPeriodValue >= 0 && inputValue >= 0 ? inputValue - prevPeriodValue : undefined;
+    return (prevPeriodValue >= 0 && inputValue >= 0 ? inputValue - prevPeriodValue : undefined) as number;
   }
 
   getPrevPeriodPaymentAmount(item: Payment): number {
-    return item.prevPeriodPayment && item.prevPeriodPayment.paymentAmount;
+    return item.prevPeriodPayment?.paymentAmount as number;
   }
 
   getPrevPeriodCommissionAmount(item: Payment): number {
-    return item.prevPeriodPayment && item.prevPeriodPayment.commissionAmount;
+    return item.prevPeriodPayment?.commissionAmount as number;
   }
 
   tableRowClick(item: SelectableItem<Payment>): void {
@@ -359,8 +359,8 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
     this.selectableItems.set([...this.selectableItems()]);
   }
 
-  productCounterOnClick(event: any, item: Payment): void {
-    let initialValue = item.productCounter.toString();
+  productCounterOnClick(event: MouseEvent, item: Payment): void {
+    let initialValue = (item.productCounter ?? 0).toString();
     if (item.productCounter === 0) {
       const prevProductCounter = this.getPrevPeriodProductCounter(item);
       if (prevProductCounter && prevProductCounter > 0) {
@@ -371,24 +371,24 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
     this.inlineEditHandler.start(item, InlineControl.ProductCounter, initialValue);
   }
 
-  paymentAmountOnClick(event: any, item: Payment): void {
+  paymentAmountOnClick(event: MouseEvent, item: Payment): void {
     this.inlineEditHandler.refOnClick(event);
-    this.inlineEditHandler.start(item, InlineControl.PaymentAmount, item.paymentAmount.toFixed(2));
+    this.inlineEditHandler.start(item, InlineControl.PaymentAmount, (item.paymentAmount ?? 0).toFixed(2));
   }
 
-  commissionAmountOnClick(event: any, item: Payment): void {
+  commissionAmountOnClick(event: MouseEvent, item: Payment): void {
     this.inlineEditHandler.refOnClick(event);
-    this.inlineEditHandler.start(item, InlineControl.CommissionAmount, item.commissionAmount.toFixed(2));
+    this.inlineEditHandler.start(item, InlineControl.CommissionAmount, (item.commissionAmount ?? 0).toFixed(2));
   }
 
-  duplicatePreviousPeriodOnClick(event: any): void {
+  duplicatePreviousPeriodOnClick(event: Event): void {
     event.preventDefault();
     this.duplicateRepository.postFormData(new HttpParams()
       .append('paymentObjectId', this.paymentObjectId()!.toString(10))
       .append('paymentPeriodDate', this.convertedPeriodDate()!.toJSON()));
   }
 
-  pervPeriodCounterLabelClick(event: any, productCounter: number): void {
+  pervPeriodCounterLabelClick(event: Event, productCounter: number): void {
     event.preventDefault();
     this.editForm.controls.productCounter.setValue(productCounter);
   }

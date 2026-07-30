@@ -1,5 +1,7 @@
+import packageJson from '../../package.json';
+
 export const environment = {
-  VERSION: require('../../package.json').version,
+  VERSION: packageJson.version,
   production: true,
   restUrl: 'http://localhost:8080/rainments-wss/'
 };

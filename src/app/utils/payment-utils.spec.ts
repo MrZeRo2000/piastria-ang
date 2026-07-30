@@ -7,7 +7,6 @@ import {PaymentAmountSummary} from '../model/payment-amount-summary';
 
 describe('PaymentUtils', () => {
   const paymentObject1 = new PaymentObject(1, 'Object 1');
-  const paymentObject2 = new PaymentObject(2, 'Object 2');
 
   const paymentGroup1 = new PaymentGroup(1, 'Group 1');
   const paymentGroup2 = new PaymentGroup(2, 'Group 2');
@@ -26,7 +25,7 @@ describe('PaymentUtils', () => {
   ];
   const totals = testPayments.reduce(
     (a, v) => {
-      a[0] = a[0] + v.paymentAmount; a[1] = a[1] + v.commissionAmount; return a;
+      a[0] = a[0] + (v.paymentAmount ?? 0); a[1] = a[1] + (v.commissionAmount ?? 0); return a;
       }, [0, 0]
   );
 
@@ -41,14 +40,12 @@ describe('PaymentUtils', () => {
     expect(summary.commissionAmount).toBeCloseTo(totals[1]);
   });
 
-  const groups = ['periodDate', 'paymentObject', 'paymentGroup', 'product'];
-
   const groupKeys1 = ['periodDate', 'paymentObject'];
   it ('groupBy ' + JSON.stringify(groupKeys1), () => {
     const result = PaymentUtils.groupBy(testPayments, groupKeys1);
     console.log('test1:' + JSON.stringify(result));
-    const totalPaymentAmount = result.reduce((a, v) => a + v.paymentAmount, 0);
-    const totalCommissionAmount = result.reduce((a, v) => a + v.commissionAmount, 0);
+    const totalPaymentAmount = result.reduce((a, v) => a + (v.paymentAmount ?? 0), 0);
+    const totalCommissionAmount = result.reduce((a, v) => a + (v.commissionAmount ?? 0), 0);
     expect(totalPaymentAmount).toBeCloseTo(totals[0]);
     expect(totalCommissionAmount).toBeCloseTo(totals[1]);
     expect(result.length).toBe(2);
@@ -71,7 +68,7 @@ describe('PaymentUtils', () => {
     expect(JSON.stringify(result[0].paymentObject)).toBe(JSON.stringify(paymentObject1));
   });
 
-  const groupKeys3 = [];
+  const groupKeys3: string[] = [];
   it ('groupBy ' + JSON.stringify(groupKeys3), () => {
     const result = PaymentUtils.groupBy(testPayments, groupKeys3);
     console.log('test3:' + JSON.stringify(result));

@@ -1,4 +1,4 @@
-import {Component, input, ChangeDetectionStrategy} from '@angular/core';
+import {Component, input} from '@angular/core';
 import {RouterLink} from '@angular/router';
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
@@ -11,7 +11,6 @@ import {MatButtonModule} from "@angular/material/button";
     MatButtonModule,
     RouterLink
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./report-nav.component.scss']
 })
 export class ReportNavComponent {

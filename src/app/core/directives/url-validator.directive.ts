@@ -1,5 +1,5 @@
 import { Directive } from '@angular/core';
-import {AbstractControl, NG_VALIDATORS, Validator} from '@angular/forms';
+import {AbstractControl, NG_VALIDATORS, ValidationErrors, Validator} from '@angular/forms';
 import {urlValidator} from '../validators/form-validators';
 
 @Directive({
@@ -11,7 +11,7 @@ export class UrlValidatorDirective implements Validator {
 
   constructor() { }
 
-  validate(control: AbstractControl): {[key: string]: any} {
+  validate(control: AbstractControl): ValidationErrors | null {
     return this.valFn(control);
   }
 }

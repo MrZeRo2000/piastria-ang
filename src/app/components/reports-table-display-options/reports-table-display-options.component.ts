@@ -1,4 +1,4 @@
-import {Component, inject, input, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {Component, inject, input, OnInit} from '@angular/core';
 import {outputFromObservable} from '@angular/core/rxjs-interop';
 import {map, tap} from 'rxjs';
 import {FormBuilder, ReactiveFormsModule} from '@angular/forms';
@@ -11,10 +11,10 @@ import {MatDividerModule} from "@angular/material/divider";
 export class ReportsTableDisplayOptions {
   private readonly KEY = 'reportsTableDisplayOptions';
 
-  public showDate: boolean;
-  public showGroup: boolean;
-  public showProduct: boolean;
-  public displayColors: boolean;
+  public showDate: boolean = true;
+  public showGroup: boolean = true;
+  public showProduct: boolean = true;
+  public displayColors: boolean = true;
 
   public static fromLocalStorage(): ReportsTableDisplayOptions {
     const instance = new ReportsTableDisplayOptions();
@@ -45,7 +45,7 @@ export class ReportsTableDisplayOptions {
       try {
         const localObject = JSON.parse(localItem);
         this.displayColors = localObject.displayColors;
-      } catch (e) {
+      } catch {
         this.loadDefaults();
       }
     }
@@ -64,7 +64,6 @@ export class ReportsTableDisplayOptions {
     MatSlideToggleModule,
     MatDividerModule
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./reports-table-display-options.component.scss']
 })
 export class ReportsTableDisplayOptionsComponent implements OnInit {
@@ -83,7 +82,12 @@ export class ReportsTableDisplayOptionsComponent implements OnInit {
   // The initial seed (ngOnInit) uses emitEvent:false, so it never fires here.
   selectionChanged = outputFromObservable(
     this.displayOptionsForm.valueChanges.pipe(
-      tap(value => Object.assign(this.reportsTableDisplayOptions(), value)),
+      tap(value => {
+        const options = this.reportsTableDisplayOptions();
+        if (options) {
+          Object.assign(options, value);
+        }
+      }),
       map(() => this.reportsTableDisplayOptions())
     )
   );

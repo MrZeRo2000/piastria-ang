@@ -12,6 +12,7 @@ export class DragHandlerService {
     if (this.dragging) {
       return 'cursor-grip';
     }
+    return '';
   }
 
   startDrag(): void {

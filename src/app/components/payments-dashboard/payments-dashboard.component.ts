@@ -1,4 +1,4 @@
-import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {Router} from '@angular/router';
 import {CommonTableComponent} from '../../core/table/common-table-component';
 import {PaymentObjectTotals} from '../../model/payment-object-totals';
@@ -25,7 +25,6 @@ import {PAYMENT_OBJECT_TOTALS_READ_REPOSITORY} from "../../repository/repository
     AmountPipe,
     LoadingProgressComponent
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./payments-dashboard.component.scss']
 })
 export class PaymentsDashboardComponent extends CommonTableComponent<PaymentObjectTotals> {
@@ -37,8 +36,8 @@ export class PaymentsDashboardComponent extends CommonTableComponent<PaymentObje
       .append('currentDate', DateGenerator.getConvertedPeriodDate(DateGenerator.getCurrentDate()).toJSON());
   }
 
-  onSelectPaymentObject(event, item: PaymentObjectTotals) {
+  onSelectPaymentObject(event: MouseEvent, item: PaymentObjectTotals) {
     event.preventDefault();
-    this.router.navigateByUrl('/payments/' + item.paymentObject.id).then();
+    this.router.navigateByUrl('/payments/' + item.paymentObject?.id).then();
   }
 }

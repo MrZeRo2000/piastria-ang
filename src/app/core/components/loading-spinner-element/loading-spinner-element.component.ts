@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
@@ -7,7 +7,6 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
   imports: [
     MatProgressSpinnerModule
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./loading-spinner-element.component.scss']
 })
 export class LoadingSpinnerElementComponent {

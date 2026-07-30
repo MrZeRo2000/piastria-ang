@@ -4,7 +4,7 @@ export class DateRangeGenerator {
   private readonly minDate;
   private readonly maxDate;
   private readonly period;
-  private readonly periodHandler: IPeriodHandler;
+  private readonly periodHandler: IPeriodHandler | undefined;
 
   constructor(minDate: Date, maxDate: Date, period: string = 'M') {
     this.minDate = minDate;
@@ -21,10 +21,10 @@ export class DateRangeGenerator {
   getYears(): Array<number> {
     const minYear = this.minDate.getFullYear();
     const maxYear = this.maxDate.getFullYear();
-    return [...Array(maxYear - minYear + 1)].map((c, i, v) => minYear + i);
+    return [...Array(maxYear - minYear + 1)].map((c, i) => minYear + i);
   }
 
-  getPeriods(): Array<PeriodInfo> {
+  getPeriods(): Array<PeriodInfo> | null {
     if (this.periodHandler) {
       return this.periodHandler.getPeriods();
     } else  {
@@ -32,7 +32,7 @@ export class DateRangeGenerator {
     }
   }
 
-  getPeriodValue(date: Date): number {
+  getPeriodValue(date: Date): number | null {
     if (this.periodHandler) {
       return this.periodHandler.getPeriodValue(date);
     } else {
@@ -40,7 +40,7 @@ export class DateRangeGenerator {
     }
   }
 
-  getPeriodDate(year: number, periodValue: number): Date {
+  getPeriodDate(year: number, periodValue: number): Date | null {
     if (this.periodHandler) {
       return this.periodHandler.getPeriodDate(year, periodValue);
     } else {
@@ -48,7 +48,7 @@ export class DateRangeGenerator {
     }
   }
 
-  addPeriod(date: Date, value: number): Date {
+  addPeriod(date: Date, value: number): Date | null {
     if (this.periodHandler) {
       return this.periodHandler.addPeriod(date, value);
     } else {
@@ -78,7 +78,7 @@ class PeriodMonthHandler implements IPeriodHandler {
   }
 
   getPeriods(): Array<PeriodInfo> {
-    return [...Array(12)].map((c, i, v) =>
+    return [...Array(12)].map((c, i) =>
       new PeriodInfo(i, DateFormatter.formatDateShortMonth(new Date(0, i))));
   }
 }
@@ -97,7 +97,7 @@ class PeriodQuarterHandler implements IPeriodHandler {
   }
 
   getPeriods(): Array<PeriodInfo> {
-    return [...Array(4)].map((c, i, v) => {
+    return [...Array(4)].map((c, i) => {
       const monthStart = i * 3;
       const monthEnd = monthStart + 2;
       const monthStartFormatted = DateFormatter.formatDateShortMonth(new Date(0, monthStart))

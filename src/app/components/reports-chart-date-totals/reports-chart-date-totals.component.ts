@@ -7,8 +7,7 @@ import {
   HostListener,
   input,
   viewChild,
-  ViewEncapsulation,
-  ChangeDetectionStrategy
+  ViewEncapsulation
 } from '@angular/core';
 import {Payment} from '../../model/payment';
 
@@ -30,7 +29,6 @@ import {NgStyle} from "@angular/common";
   imports: [
     NgStyle
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./reports-chart-date-totals.component.scss']
 })
 export class ReportsChartDateTotalsComponent implements AfterViewInit {
@@ -44,9 +42,9 @@ export class ReportsChartDateTotalsComponent implements AfterViewInit {
     return payments && payments.length > 0 ? PaymentsColorUtils.calcPaymentColorsTotals(payments) : undefined;
   });
 
-  dataWidth = computed(() => this.paymentColorsResult()?.paymentColorsTotals.length * 100);
+  dataWidth = computed(() => (this.paymentColorsResult()?.paymentColorsTotals.length ?? 0) * 100);
 
-  drawer: IDrawer;
+  drawer: IDrawer | undefined;
 
   private readonly margin: { top: number, bottom: number, left: number; right: number} =
     {top: 20, bottom: 30, left: 60, right: 20};
@@ -61,17 +59,21 @@ export class ReportsChartDateTotalsComponent implements AfterViewInit {
 
   private container = viewChild<ElementRef>('container');
 
-  // Top level SVG element
-  svg;
+  // Top level SVG element — D3 selection datum type shifts across the
+  // append()/select() chain below in the same way as reports-chart-date-totals-drawers.ts.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  svg: any;
   // content group
-  contentGroup;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  contentGroup: any;
   // SVG Group element
-  g;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  g: any;
 
-  private containerWidth: number;
+  private containerWidth: number | undefined;
 
   constructor() {
-    // Redraw when the data (colors) or chart style changes — once the container is measured.
+    // Redraw when the data (colors) or chart style changes â€” once the container is measured.
     effect(() => {
       const colors = this.paymentColorsResult();
       this.displayOptions(); // tracked: a chart-style change should also trigger a redraw
@@ -93,11 +95,11 @@ export class ReportsChartDateTotalsComponent implements AfterViewInit {
   private createDrawer(): void {
     const chartStyle = this.displayOptions()?.chartStyle;
     if (chartStyle === ChartStyle.BarChart) {
-      this.drawer = new BarChartDrawer(this.paymentColorsResult())
+      this.drawer = new BarChartDrawer(this.paymentColorsResult()!)
     } else if (chartStyle === ChartStyle.StackedBarChart) {
-      this.drawer = new StackedBarChartDrawer(this.paymentColorsResult())
+      this.drawer = new StackedBarChartDrawer(this.paymentColorsResult()!)
     } else if (chartStyle === ChartStyle.SideBySideBarChart) {
-      this.drawer = new SideBySideBarChartDrawer(this.paymentColorsResult())
+      this.drawer = new SideBySideBarChartDrawer(this.paymentColorsResult()!)
     } else {
       this.drawer = undefined;
     }
@@ -108,7 +110,7 @@ export class ReportsChartDateTotalsComponent implements AfterViewInit {
   }
 
   private innerWidth(): number {
-    return Math.max(this.containerWidth, this.dataWidth())
+    return Math.max(this.containerWidth!, this.dataWidth())
       - this.margin.left - this.margin.right;
   }
 
@@ -133,12 +135,12 @@ export class ReportsChartDateTotalsComponent implements AfterViewInit {
   private createAxes() {
     this.xScale
       .rangeRound([0, this.innerWidth()])
-      .domain(this.paymentColorsResult()?.paymentColorsTotals.map(value => DateFormatter.formatDateShortMonthYear(value.periodDate)))
+      .domain(this.paymentColorsResult()!.paymentColorsTotals.map(value => DateFormatter.formatDateShortMonthYear(value.periodDate)))
       .padding(0.5);
 
     this
       .yScale.rangeRound([this.innerHeight(), 0])
-      .domain([0, this.drawer?.getMaxY()]);
+      .domain([0, this.drawer!.getMaxY()]);
 
     this.contentGroup.append('g')
       .attr('id', 'x-axis')
@@ -172,16 +174,16 @@ export class ReportsChartDateTotalsComponent implements AfterViewInit {
   }
 
   public updateChart() {
-    if (!!this.svg) {
+    if (this.svg) {
       this.removeExistingChartElement();
     }
-    if (!!this.paymentColorsResult()) {
+    if (this.paymentColorsResult()) {
       this.createChart();
     }
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
+  onResize(_event: Event) {
     this.updateContainerWidth();
 
     const svg = d3.select(this.chartContainer()?.nativeElement);

@@ -1,4 +1,4 @@
-import {Component, input, output, ChangeDetectionStrategy} from '@angular/core';
+import {Component, input, output} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {EditMode, EditState} from '../../edit/edit-state';
 
@@ -8,14 +8,13 @@ import {EditMode, EditState} from '../../edit/edit-state';
     imports: [
       MatButtonModule
     ],
-    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./save-dialog-panel.component.scss']
 })
-export class SaveDialogPanelComponent {
+export class SaveDialogPanelComponent<T> {
   EditMode = EditMode;
 
   loading = input<boolean>();
-  editState = input<EditState<any> | undefined>();
+  editState = input<EditState<T> | undefined>();
 
   createClick = output<void>();
   saveClick = output<void>();

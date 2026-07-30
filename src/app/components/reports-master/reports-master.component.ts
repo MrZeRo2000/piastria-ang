@@ -1,4 +1,4 @@
-import {Component, computed, effect, inject, signal, untracked, ChangeDetectionStrategy} from '@angular/core';
+import {Component, computed, effect, inject, signal, untracked} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ActivatedRoute} from '@angular/router';
 import { HttpParams } from '@angular/common/http';
@@ -54,7 +54,6 @@ enum ControlTab {
     provideNativeDateAdapter(APP_DATE_FORMATS),
     {provide: DateAdapter, useClass: AppDateAdapter},
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./reports-master.component.scss']
 })
 export default class ReportsMasterComponent extends CommonTableComponent<PaymentRep> {
@@ -103,7 +102,7 @@ export default class ReportsMasterComponent extends CommonTableComponent<Payment
     const selectedGroupNames = SelectableItem.getSelectedItemValues(groups);
     const selectedProductNames = SelectableItem.getSelectedItemValues(products);
     const filteredPaymentList = this.repositoryPaymentList().filter(
-      v => selectedGroupNames.includes(v.paymentGroup.name) && selectedProductNames.includes(v.product.name)
+      v => selectedGroupNames.includes(v.paymentGroup?.name ?? '') && selectedProductNames.includes(v.product?.name ?? '')
     );
     return PaymentUtils.groupBy(filteredPaymentList, this.selectedColumns());
   });
@@ -113,7 +112,7 @@ export default class ReportsMasterComponent extends CommonTableComponent<Payment
 
     const dateEnd = DateGenerator.getCurrentMonthStartDate();
     //const dateStart = new Date(dateEnd.getFullYear() - 1, 0, 1);
-    let dateStart = new Date(dateEnd)
+    const dateStart = new Date(dateEnd)
     dateStart.setMonth(dateEnd.getMonth() - 13);
     this.dateRange.set([dateStart, dateEnd]);
     this.dateRangeForm.setValue({start: dateStart, end: dateEnd}, {emitEvent: false});
@@ -137,9 +136,9 @@ export default class ReportsMasterComponent extends CommonTableComponent<Payment
       if (rep && rep.paymentRepList.length > 0) {
         untracked(() => console.log(`Report-master effect setting selected groups before: ${JSON.stringify(this.selectedGroups())}`))
         this.selectedGroups.set(
-          this.buildSelectableItems(untracked(() => this.selectedGroups()), rep.paymentRepList, v => v.paymentGroup.name));
+          this.buildSelectableItems(untracked(() => this.selectedGroups()), rep.paymentRepList, v => v.paymentGroup?.name ?? ''));
         this.selectedProducts.set(
-          this.buildSelectableItems(untracked(() => this.selectedProducts()), rep.paymentRepList, v => v.product.name));
+          this.buildSelectableItems(untracked(() => this.selectedProducts()), rep.paymentRepList, v => v.product?.name ?? ''));
         untracked(() => console.log(`Report-master effect setting selected groups after: ${JSON.stringify(this.selectedGroups())}`))
       }
     });
@@ -183,7 +182,7 @@ export default class ReportsMasterComponent extends CommonTableComponent<Payment
     this.selectedProducts.set(items);
   }
 
-  tableDisplayOptionsChanged(displayOptions: ReportsTableDisplayOptions): void {
+  tableDisplayOptionsChanged(): void {
     this.tableDisplayOptions.saveToLocalStorage();
     this.selectedColumns.set(ReportsMasterComponent.COLUMNS.filter(
       s => (s === ReportsMasterComponent.PERIOD_DATE_COLUMN && this.tableDisplayOptions.showDate) ||

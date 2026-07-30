@@ -1,4 +1,4 @@
-import {Component, computed, effect, ElementRef, inject, signal, viewChild, ChangeDetectionStrategy} from '@angular/core';
+import {Component, computed, effect, ElementRef, inject, signal, viewChild} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {PaymentGroup} from '../../model/payment-group';
 import {
@@ -11,7 +11,7 @@ import {DragHandlerService} from '../../core/services/drag-handler.service';
 import {duplicateNamesValidator, urlValidator} from '../../core/validators/form-validators';
 import {AddPanelComponent} from "../../core/components/add-panel/add-panel.component";
 import {DropDownMoreMenuComponent} from "../../core/components/drop-down-more-menu/drop-down-more-menu.component";
-import {CdkDrag, CdkDragHandle, CdkDropList} from "@angular/cdk/drag-drop";
+import {CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList} from "@angular/cdk/drag-drop";
 import {MatTableModule} from "@angular/material/table";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
@@ -46,7 +46,6 @@ import {MatMenuItem} from "@angular/material/menu";
     LoadingProgressComponent,
     MatMenuItem
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./payment-groups-table.component.scss']
 })
 export class PaymentGroupsTableComponent extends CommonSimpleEditableTableComponent<PaymentGroup> {
@@ -94,7 +93,7 @@ export class PaymentGroupsTableComponent extends CommonSimpleEditableTableCompon
   });
 
   protected getPersistData(): PaymentGroup {
-    const o: any = super.getPersistData();
+    const o = super.getPersistData();
 
     if (o.color && o.color.toUpperCase() === this.DEFAULT_COLOR) {
       o.color = null;
@@ -110,7 +109,7 @@ export class PaymentGroupsTableComponent extends CommonSimpleEditableTableCompon
     this.editForm.controls.color.setValue((event.target as HTMLInputElement).value);
   }
 
-  onDrop(event: any): void {
+  onDrop(event: CdkDragDrop<unknown>): void {
     this.dragHandlerService.stopDrag();
     super.onDrop(event);
   }
