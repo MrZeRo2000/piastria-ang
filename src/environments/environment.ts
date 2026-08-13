@@ -7,7 +7,8 @@ import packageJson from '../../package.json';
 export const environment = {
   VERSION: packageJson.version,
   production: false,
-  restUrl: 'http://localhost:8080/rainments-int-wss/'
+  restUrl: 'http://localhost:8080/rainments-int-wss/',
+  httpDelay: 2000
 };
 
 /*

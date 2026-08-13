@@ -8,7 +8,11 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MessagesService} from "../../messages/messages.service";
 import {SuccessMessage} from "../../messages/message.model";
-import {BACKUP_DATABASE_CRUD_REPOSITORY, BACKUP_INFO_READ_REPOSITORY} from "../../repository/repository-tokens";
+import {
+  APP_INFO_READ_REPOSITORY,
+  BACKUP_DATABASE_CRUD_REPOSITORY,
+  BACKUP_INFO_READ_REPOSITORY
+} from "../../repository/repository-tokens";
 
 @Component({
   selector: 'app-backup-database-button',
@@ -23,7 +27,10 @@ import {BACKUP_DATABASE_CRUD_REPOSITORY, BACKUP_INFO_READ_REPOSITORY} from "../.
 export class BackupDatabaseButtonComponent {
   public backupDatabaseRepository = inject(BACKUP_DATABASE_CRUD_REPOSITORY)
   private backupInfoRepository = inject(BACKUP_INFO_READ_REPOSITORY)
+  public appInfoRepository = inject(APP_INFO_READ_REPOSITORY);
   private messagesService = inject(MessagesService)
+
+  appInfoSignal = this.appInfoRepository.dataSignal
 
   // Last-backup info shown in the tooltip. It's read from the shared, root-provided
   // BACKUP_INFO_READ_REPOSITORY so this button and the data-management page render the

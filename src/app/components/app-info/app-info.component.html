@@ -1,8 +1,7 @@
 <div class="app-title-medium app-info">Version: {{version}}
   @if (readRepository.loadingSignal()) {
     ...
-  }
-  @if (repositoryData$ | async; as data) {
-  <small>({{data[0].version}})</small>
+  } @else {
+    <small>({{dataSignal()[0].version}})</small>
   }
 </div>
