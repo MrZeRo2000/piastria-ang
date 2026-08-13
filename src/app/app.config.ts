@@ -4,6 +4,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import {provideHttpClient, withInterceptors, withInterceptorsFromDi, withXhr} from '@angular/common/http';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { MAT_ICON_DEFAULT_OPTIONS } from '@angular/material/icon';
 
 import { routes } from './app.routes';
 import { RestUrlEnv } from './config/configuration';
@@ -23,6 +24,9 @@ export const appConfig: ApplicationConfig = {
     provideNativeDateAdapter(),
     // Match the reference project (violetnote-ang): outlined form fields app-wide.
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
+    // mat-icon defaults to the legacy `material-icons` font set; point it at the
+    // Material Symbols stylesheet loaded in index.html instead.
+    { provide: MAT_ICON_DEFAULT_OPTIONS, useValue: { fontSet: 'material-symbols-outlined' } },
     RestUrlEnv,
     RestDataSource,
   ]

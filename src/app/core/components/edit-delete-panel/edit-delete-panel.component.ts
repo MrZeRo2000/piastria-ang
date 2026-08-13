@@ -18,11 +18,13 @@ export class EditDeletePanelComponent<T> {
   deleteClick = output<T>();
   editClick = output<T>();
 
-  onDeleteClick(item: T): void {
+  onDeleteClick(event: Event, item: T): void {
+    event.stopPropagation()
     this.deleteClick.emit(item);
   }
 
-  onEditClick(item: T): void {
+  onEditClick(event: Event, item: T): void {
+    event.stopPropagation()
     this.editClick.emit(item);
   }
 

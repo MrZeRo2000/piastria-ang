@@ -1,6 +1,6 @@
-<button matIconButton (click)="onDeleteClick(item()!)" aria-label="Delete">
+<button matIconButton (click)="onDeleteClick($event, item()!)" aria-label="Delete">
   <mat-icon>delete</mat-icon>
 </button>
-<button matIconButton (click)="onEditClick(item()!)" aria-label="Edit">
+<button matIconButton (click)="onEditClick($event, item()!)" aria-label="Edit">
   <mat-icon>edit</mat-icon>
 </button>
