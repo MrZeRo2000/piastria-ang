@@ -28,33 +28,35 @@
   </mat-card-content>
 </mat-card>
 
-<mat-card appearance="outlined" class="group-card">
-  <mat-card-header>
-    <mat-card-title>By group</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <mat-table [dataSource]="groupSummary()">
-      <ng-container matColumnDef="group">
-        <mat-header-cell *matHeaderCellDef>Group</mat-header-cell>
-        <mat-cell *matCellDef="let item">{{item.paymentGroup.name}}</mat-cell>
-      </ng-container>
+@if (totalSummary().paymentAmount > 0) {
+  <mat-card appearance="outlined" class="group-card">
+    <mat-card-header>
+      <mat-card-title>By group</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-table [dataSource]="groupSummary()">
+        <ng-container matColumnDef="group">
+          <mat-header-cell *matHeaderCellDef>Group</mat-header-cell>
+          <mat-cell *matCellDef="let item">{{item.paymentGroup.name}}</mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="amount">
-        <mat-header-cell *matHeaderCellDef>
-          Payment@if (paymentsTableDisplayOptions().showCommission()) { / Commission}
-        </mat-header-cell>
-        <mat-cell *matCellDef="let item">
-          <div class="amount-cell">
-            <div>{{item.paymentAmount | amount}}</div>
-            @if (paymentsTableDisplayOptions().showCommission() && item.commissionAmount) {
-              <div class="amount-cell__commission"><small>{{item.commissionAmount | amount}}</small></div>
-            }
-          </div>
-        </mat-cell>
-      </ng-container>
+        <ng-container matColumnDef="amount">
+          <mat-header-cell *matHeaderCellDef>
+            Payment@if (paymentsTableDisplayOptions().showCommission()) { / Commission}
+          </mat-header-cell>
+          <mat-cell *matCellDef="let item">
+            <div class="amount-cell">
+              <div>{{item.paymentAmount | amount}}</div>
+              @if (paymentsTableDisplayOptions().showCommission() && item.commissionAmount) {
+                <div class="amount-cell__commission"><small>{{item.commissionAmount | amount}}</small></div>
+              }
+            </div>
+          </mat-cell>
+        </ng-container>
 
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns" [style.background-color]="row.paymentGroup.color"></mat-row>
-    </mat-table>
-  </mat-card-content>
-</mat-card>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns" [style.background-color]="row.paymentGroup.color"></mat-row>
+      </mat-table>
+    </mat-card-content>
+  </mat-card>
+}
