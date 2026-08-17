@@ -1,6 +1,6 @@
 {
   "name": "rainments-ang",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --no-hmr",
