@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AppInfoComponent } from './components/app-info/app-info.component';
 import { NavTopComponent } from './components/nav-top/nav-top.component';
-import { BackupDatabaseButtonComponent } from './components/backup-database-button/backup-database-button.component';
+import { AppHeaderComponent } from './components/app-header/app-header.component';
 
 @Component({
   selector: 'app-root',
@@ -10,9 +9,8 @@ import { BackupDatabaseButtonComponent } from './components/backup-database-butt
   styleUrls: ['./app.component.scss'],
   imports: [
     RouterOutlet,
-    AppInfoComponent,
     NavTopComponent,
-    BackupDatabaseButtonComponent
+    AppHeaderComponent
   ]
 })
 export class AppComponent {

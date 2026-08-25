@@ -1,0 +1,37 @@
+.app-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.app-logo {
+  height: 3.5rem;
+  margin-right: 1rem;
+}
+
+.app-title-row {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+}
+
+.app-title {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+
+  font-size: 2.5rem;
+  font-weight: 300;
+}
+
+.app-detail-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-detail {
+  display: flex;
+  align-items: center;
+}

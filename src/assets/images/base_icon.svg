@@ -1,0 +1,89 @@
+<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Piastre coin logo in silver">
+  <defs>
+    <radialGradient id="coinCore" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#FDFEFF"/>
+      <stop offset="40%" stop-color="#DDE3E8"/>
+      <stop offset="75%" stop-color="#AEB8C1"/>
+      <stop offset="100%" stop-color="#727E89"/>
+    </radialGradient>
+
+    <linearGradient id="coinRim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F7FAFC"/>
+      <stop offset="35%" stop-color="#C9D1D8"/>
+      <stop offset="70%" stop-color="#8F9AA4"/>
+      <stop offset="100%" stop-color="#5E6872"/>
+    </linearGradient>
+
+    <linearGradient id="letterFill" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#D6DDE3"/>
+    </linearGradient>
+
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#2D3338" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#shadow)">
+    <!-- Outer coin -->
+    <circle cx="128" cy="128" r="112" fill="url(#coinRim)"/>
+
+    <!-- Decorative edge -->
+    <circle cx="128" cy="128" r="103" fill="none" stroke="#EEF3F6" stroke-width="8" opacity="0.9" stroke-dasharray="3 10" stroke-linecap="round"/>
+
+    <!-- Inner face -->
+    <circle cx="128" cy="128" r="88" fill="url(#coinCore)" stroke="#E8EEF2" stroke-width="4"/>
+
+    <!-- Soft highlight -->
+    <ellipse cx="98" cy="82" rx="44" ry="26" fill="#FFFFFF" opacity="0.22" transform="rotate(-18 98 82)"/>
+
+    <!-- Inner ring -->
+    <circle cx="128" cy="128" r="70" fill="none" stroke="#7C8893" stroke-width="6" opacity="0.65"/>
+
+    <!-- Main symbol: 20% smaller and centered -->
+    <path
+      transform="translate(128 128) scale(0.8) translate(-136 -128)"
+      fill-rule="evenodd"
+      d="
+        M112 72
+        H136
+        C162 72 179 86 179 108
+        C179 129 162 143 136 143
+        H129
+        V162
+        H146
+        C152 162 157 167 157 173
+        C157 179 152 184 146 184
+        H104
+        C98 184 93 179 93 173
+        C93 167 98 162 104 162
+        H107
+        V83
+        C107 77 109 72 112 72
+        Z
+
+        M129 94
+        V121
+        H136
+        C147 121 155 116 155 107.5
+        C155 99 147 94 136 94
+        H129
+        Z"
+      fill="url(#letterFill)"
+      stroke="#4F5963"
+      stroke-width="6"
+      stroke-linejoin="round"
+      stroke-linecap="round"/>
+
+    <!-- Bottom dots -->
+    <g fill="#F1F5F8" opacity="0.95">
+      <circle cx="84" cy="188" r="4"/>
+      <circle cx="98" cy="196" r="4"/>
+      <circle cx="113" cy="201" r="4"/>
+      <circle cx="128" cy="203" r="4"/>
+      <circle cx="143" cy="201" r="4"/>
+      <circle cx="158" cy="196" r="4"/>
+      <circle cx="172" cy="188" r="4"/>
+    </g>
+  </g>
+</svg>
