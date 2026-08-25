@@ -1,0 +1,69 @@
+<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Piastre coin favicon in silver">
+  <defs>
+    <radialGradient id="coinFace" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#FDFEFF"/>
+      <stop offset="45%" stop-color="#D9E0E6"/>
+      <stop offset="100%" stop-color="#7A8590"/>
+    </radialGradient>
+
+    <linearGradient id="coinRim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F7FAFC"/>
+      <stop offset="50%" stop-color="#B8C1C9"/>
+      <stop offset="100%" stop-color="#5D6872"/>
+    </linearGradient>
+
+    <linearGradient id="letterFill" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E2E8ED"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Coin -->
+  <circle cx="128" cy="128" r="112" fill="url(#coinRim)"/>
+  <circle cx="128" cy="128" r="90" fill="url(#coinFace)" stroke="#E8EEF2" stroke-width="6"/>
+
+  <!-- Subtle highlight -->
+  <ellipse cx="94" cy="84" rx="34" ry="20" fill="#FFFFFF" opacity="0.18" transform="rotate(-18 94 84)"/>
+
+  <!-- Bold centered P for favicon readability -->
+  <path
+    transform="translate(1 -10)"
+    fill-rule="evenodd"
+    d="
+      M109 76
+      H136
+      C162 76 179 90 179 112
+      C179 134 162 148 136 148
+      H128
+      V170
+      H144
+      C150 170 154 174 154 180
+      C154 186 150 190 144 190
+      H108
+      C102 190 98 186 98 180
+      C98 174 102 170 108 170
+      H108
+      V86
+      C108 80 109 76 109 76
+      Z
+
+      M128 98
+      V126
+      H136
+      C146 126 154 121 154 112
+      C154 103 146 98 136 98
+      H128
+      Z"
+    fill="url(#letterFill)"
+    stroke="#4E5963"
+    stroke-width="8"
+    stroke-linejoin="round"
+    stroke-linecap="round"/>
+
+  <!-- Minimal bottom markers -->
+  <g fill="#F4F7F9" opacity="0.95">
+    <circle cx="106" cy="194" r="4"/>
+    <circle cx="128" cy="198" r="4"/>
+    <circle cx="150" cy="194" r="4"/>
+  </g>
+</svg>
