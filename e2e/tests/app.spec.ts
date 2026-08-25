@@ -2,6 +2,6 @@ import { expect, test } from '@playwright/test';
 
 test('home page loads', async ({ page }) => {
   await page.goto('/');
-  await expect(page).toHaveTitle(/Rainments/i);
+  await expect(page).toHaveTitle(/Piastria/i);
   await expect(page.locator('app-root')).toBeVisible();
 });

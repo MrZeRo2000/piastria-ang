@@ -16,7 +16,7 @@ import { BackupDatabaseButtonComponent } from './components/backup-database-butt
   ]
 })
 export class AppComponent {
-  title = 'Rainments';
+  title = 'Piastria';
 
   constructor() { }
 }

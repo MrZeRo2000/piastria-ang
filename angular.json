@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "rainments-ang": {
+    "piastria-ang": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -14,7 +14,7 @@
           "builder": "@angular/build:application",
           "options": {
             "outputPath": {
-              "base": "dist/rainments-ang"
+              "base": "dist/piastria-ang"
             },
             "index": "src/index.html",
             "polyfills": [
@@ -100,30 +100,30 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "options": {
-            "buildTarget": "rainments-ang:build"
+            "buildTarget": "piastria-ang:build"
           },
           "configurations": {
             "production": {
-              "buildTarget": "rainments-ang:build:production"
+              "buildTarget": "piastria-ang:build:production"
             },
             "int": {
-              "buildTarget": "rainments-ang:build:int"
+              "buildTarget": "piastria-ang:build:int"
             },
             "int-ide": {
-              "buildTarget": "rainments-ang:build:int-ide"
+              "buildTarget": "piastria-ang:build:int-ide"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n",
           "options": {
-            "buildTarget": "rainments-ang:build"
+            "buildTarget": "piastria-ang:build"
           }
         },
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "buildTarget": "rainments-ang:build",
+            "buildTarget": "piastria-ang:build",
             "runner": "vitest",
             "tsConfig": "tsconfig.spec.json",
             "setupFiles": ["src/test-setup.ts"]

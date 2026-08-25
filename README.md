@@ -1,4 +1,4 @@
-# RainmentsAng
+# PiastriaAng
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.21.
 
@@ -44,7 +44,7 @@ ng generate component password
 ng generate service PassData
 
 ## Deploy
-ng build --prod --base-href=/rainments-ang/
+ng build --prod --base-href=/piastria-ang/
 copy from dist to webapps directory
 
 ## Update angular to latest version
