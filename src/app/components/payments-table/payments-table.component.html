@@ -12,7 +12,7 @@
         </button>
       }
       @if (payments().length) {
-        <button matIconButton matTooltip="Import payments">
+        <button matIconButton (click)="importPaymentsOnClick($event)" matTooltip="Import payments">
           <mat-icon>cloud_download</mat-icon>
         </button>
       }

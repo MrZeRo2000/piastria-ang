@@ -37,6 +37,8 @@ import {
   PAYMENT_DUPLICATE_PERIOD_REPOSITORY,
   PAYMENT_REFS_READ_REPOSITORY
 } from '../../repository/repository-tokens';
+import {MatDialog} from "@angular/material/dialog";
+import {PaymentsImportDialogComponent} from "../payments-import-dialog/payments-import-dialog.component";
 
 enum InlineControl {
   ProductCounter = 'productCounterControl',
@@ -77,6 +79,7 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
   private fb = inject(FormBuilder)
   private amountPipe = inject(AmountPipe)
   private duplicateRepository = inject(PAYMENT_DUPLICATE_PERIOD_REPOSITORY)
+  readonly importDialog = inject(MatDialog);
 
   paymentObjectId = input<number>();
   paymentPeriodDate = input<Date>();
@@ -386,6 +389,20 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
     this.duplicateRepository.postFormData(new HttpParams()
       .append('paymentObjectId', this.paymentObjectId()!.toString(10))
       .append('paymentPeriodDate', this.convertedPeriodDate()!.toJSON()));
+  }
+
+  importPaymentsOnClick(event: Event): void {
+    event.preventDefault();
+    const dialogRef = this.importDialog.open(PaymentsImportDialogComponent, {
+      data: {},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      if (result !== undefined) {
+        console.log('Has some result');
+      }
+    });
   }
 
   pervPeriodCounterLabelClick(event: Event, productCounter: number): void {
