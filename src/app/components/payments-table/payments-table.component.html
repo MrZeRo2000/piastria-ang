@@ -7,8 +7,13 @@
     </div>
     <div class="toolbar-group toolbar-end">
       @if (cloneAvailable()) {
-        <button matButton="outlined" (click)="duplicatePreviousPeriodOnClick($event)">
-          <mat-icon>content_copy</mat-icon> Clone previous
+        <button matIconButton (click)="duplicatePreviousPeriodOnClick($event)" matTooltip="Clone previous period">
+          <mat-icon>content_copy</mat-icon>
+        </button>
+      }
+      @if (payments().length) {
+        <button matIconButton matTooltip="Import payments">
+          <mat-icon>cloud_download</mat-icon>
         </button>
       }
       <app-payments-table-display-options

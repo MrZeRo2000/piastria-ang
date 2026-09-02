@@ -3,6 +3,7 @@ import {MatMenuModule} from "@angular/material/menu";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatDividerModule} from "@angular/material/divider";
 
 export class PaymentsTableDisplayOptions {
@@ -78,6 +79,7 @@ export class PaymentsTableDisplayOptions {
     MatMenuModule,
     MatButtonModule,
     MatIconModule,
+    MatTooltipModule,
     MatSlideToggleModule,
     MatDividerModule
   ],
