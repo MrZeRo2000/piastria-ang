@@ -15,6 +15,7 @@ import {Payment} from "../model/payment";
 import {PaymentRep} from "../model/payment-rep";
 import {CrudRepository} from "../core/repository/crud-repository";
 import {RowsAffectedResult} from "../model/rows-affected-result";
+import {ScanResult} from "../model/scan";
 
 /**
  * Links each payment to its previous-period counterpart and builds the
@@ -187,3 +188,11 @@ export const PAYMENT_REP_READ_REPOSITORY = new InjectionToken<ReadRepository<Pay
       'payments:payments_by_payment_object_and_payment_period_date_range',
       mapPaymentRep)
   });
+
+export const SCAN_LATEST_READ_REPOSITORY = new InjectionToken<ReadRepository<ScanResult>>(
+  'SCAN_LATEST_READ_REPOSITORY',
+  {
+    providedIn: 'root',
+    factory: () => new ReadRepository(inject(RestDataSource), inject(MessagesService), 'scan-latest')
+  });
+

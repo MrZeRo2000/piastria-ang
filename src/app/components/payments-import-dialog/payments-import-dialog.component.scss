@@ -1,0 +1,15 @@
+.row {
+  display: flex;
+  align-items: flex-start;
+}
+
+.description-cell {
+  display: flex;
+  flex-grow: 1;
+}
+
+.amount-cell {
+  margin-left: 1rem;
+  display: flex;
+}
+

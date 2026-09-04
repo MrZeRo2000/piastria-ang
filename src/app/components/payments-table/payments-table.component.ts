@@ -39,6 +39,7 @@ import {
 } from '../../repository/repository-tokens';
 import {MatDialog} from "@angular/material/dialog";
 import {PaymentsImportDialogComponent} from "../payments-import-dialog/payments-import-dialog.component";
+import {PaymentObject} from "../../model/payment-object";
 
 enum InlineControl {
   ProductCounter = 'productCounterControl',
@@ -81,7 +82,7 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
   private duplicateRepository = inject(PAYMENT_DUPLICATE_PERIOD_REPOSITORY)
   readonly importDialog = inject(MatDialog);
 
-  paymentObjectId = input<number>();
+  paymentObject = input<PaymentObject>();
   paymentPeriodDate = input<Date>();
 
   // Loads on input change (effect below), not on init.
@@ -196,7 +197,7 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
 
     // Reload when the object/period inputs change, cancelling any open edit.
     effect(() => {
-      const id = this.paymentObjectId();
+      const id = this.paymentObject()!.id
       const date = this.convertedPeriodDate();
       if (id && date) {
         this.onCancel();
@@ -265,7 +266,7 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
   protected override loadRepositoryData(): void {
     this.readRepository.loadData({
       params: new HttpParams()
-        .append('paymentObjectId', this.paymentObjectId()!.toString())
+        .append('paymentObjectId', this.paymentObject()!.id!.toString())
         .append('paymentPeriodDate', this.convertedPeriodDate()!.toJSON())
     });
   }
@@ -387,14 +388,17 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
   duplicatePreviousPeriodOnClick(event: Event): void {
     event.preventDefault();
     this.duplicateRepository.postFormData(new HttpParams()
-      .append('paymentObjectId', this.paymentObjectId()!.toString(10))
+      .append('paymentObjectId', this.paymentObject()!.id!.toString(10))
       .append('paymentPeriodDate', this.convertedPeriodDate()!.toJSON()));
   }
 
   importPaymentsOnClick(event: Event): void {
     event.preventDefault();
     const dialogRef = this.importDialog.open(PaymentsImportDialogComponent, {
-      data: {},
+      data: {
+        paymentObject: this.paymentObject()!,
+        productNames: this.payments().map(v => v.product?.name).filter(v => !!v) as string[],
+      },
     });
 
     dialogRef.afterClosed().subscribe(result => {
