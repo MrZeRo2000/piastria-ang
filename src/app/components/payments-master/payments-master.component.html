@@ -1,15 +1,17 @@
 
-@if (paymentObjectTotals(); as totals) {
-  <div class="payments-header">
-    <app-payments-date-selection (selectedDate)="onSelectDate($event)" [paymentObjectTotals]="totals"></app-payments-date-selection>
-    <span class="app-title-large object-title">{{totals.paymentObject?.name}}</span>
-    <app-report-nav [itemId]="paymentObjectId" navigatePath="reports"></app-report-nav>
-  </div>
+@if(!readRepository.loadingSignal()) {
+  @if (paymentObjectTotals(); as totals) {
+    <div class="payments-header">
+      <app-payments-date-selection (selectedDate)="onSelectDate($event)" [paymentObjectTotals]="totals"></app-payments-date-selection>
+      <span class="app-title-large object-title">{{totals.paymentObject?.name}}</span>
+      <app-report-nav [itemId]="paymentObjectId" navigatePath="reports"></app-report-nav>
+    </div>
 
-  <app-payments-table
-    [paymentObject]="totals.paymentObject"
-    [paymentPeriodDate]="selectedDate()">
-  </app-payments-table>
+    <app-payments-table
+      [paymentObject]="totals.paymentObject"
+      [paymentPeriodDate]="selectedDate()">
+    </app-payments-table>
+  }
 }
 
 <app-core-loading-progress [loading]="readRepository.loadingSignal()"></app-core-loading-progress>

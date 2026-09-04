@@ -1,28 +1,30 @@
 <div class="dashboard">
 
-  <div class="dashboard-grid">
-    @for (item of readRepository.dataSignal(); track item.paymentObject?.id) {
-      <mat-card appearance="outlined" class="dashboard-card">
-        <a class="card-link" (click)="onSelectPaymentObject($event, item)" aria-label="Open payments"></a>
-        <mat-card-content>
-          <div class="card-header-row">
-            <span class="app-title-large card-title">{{item.paymentObject?.name}}</span>
-            @if (item.paymentOverdue) {
-              <mat-icon class="overdue-icon">priority_high</mat-icon>
-            }
-          </div>
-          <div class="card-footer-row">
-            <div class="report-nav-cell">
-              <app-report-nav [itemId]="item.paymentObject?.id" navigatePath="reports"></app-report-nav>
+  @if(!readRepository.loadingSignal()) {
+    <div class="dashboard-grid">
+      @for (item of readRepository.dataSignal(); track item.paymentObject?.id) {
+        <mat-card appearance="outlined" class="dashboard-card">
+          <a class="card-link" (click)="onSelectPaymentObject($event, item)" aria-label="Open payments"></a>
+          <mat-card-content>
+            <div class="card-header-row">
+              <span class="app-title-large card-title">{{item.paymentObject?.name}}</span>
+              @if (item.paymentOverdue) {
+                <mat-icon class="overdue-icon">priority_high</mat-icon>
+              }
             </div>
-            <div>
-              {{item.paymentDate | shortMonthYear}} <app-core-colored-value-label [value]="(item.paymentAmount ?? 0) | amount" [displayZero]="true"></app-core-colored-value-label>
+            <div class="card-footer-row">
+              <div class="report-nav-cell">
+                <app-report-nav [itemId]="item.paymentObject?.id" navigatePath="reports"></app-report-nav>
+              </div>
+              <div>
+                {{item.paymentDate | shortMonthYear}} <app-core-colored-value-label [value]="(item.paymentAmount ?? 0) | amount" [displayZero]="true"></app-core-colored-value-label>
+              </div>
             </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    }
-  </div>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
 
   <app-core-loading-progress [loading]="readRepository.loadingSignal()"></app-core-loading-progress>
 
