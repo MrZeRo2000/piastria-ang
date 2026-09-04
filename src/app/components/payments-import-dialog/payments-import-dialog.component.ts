@@ -1,4 +1,4 @@
-import {Component, computed, inject, OnInit} from '@angular/core';
+import {Component, computed, inject, OnInit, Signal, signal} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -14,15 +14,19 @@ import {HttpParams} from "@angular/common/http";
 import {MatListOption, MatSelectionList} from "@angular/material/list";
 import {DecimalPipe} from "@angular/common";
 import {toSignal} from "@angular/core/rxjs-interop";
-import {catchError, map, Observable, of, Subject, switchMap, tap} from "rxjs";
+import {catchError, finalize, map, Observable, of, Subject, switchMap, tap} from "rxjs";
 import {PaymentImport, ScanResult} from "../../model/scan";
 import {Payment} from "../../model/payment";
 import {RowsAffectedResult} from "../../model/rows-affected-result";
 import {RestDataSource} from "../../data-source/rest-data-source";
 import {MessagesService} from "../../messages/messages.service";
 import {RepositoryUtils} from "../../core/repository/repository-utils";
-import {CrudErrorResult, CrudStatus} from "../../core/repository/crud-repository";
 import {ErrorMessage} from "../../messages/message.model";
+
+interface ImportData {
+  paymentId?: number
+  scan: ScanResult
+}
 
 @Component({
   selector: 'app-payments-import-dialog',
@@ -49,7 +53,7 @@ export class PaymentsImportDialogComponent implements OnInit {
   readonly data = inject<{paymentObject: PaymentObject, payments: Payment[]}>(MAT_DIALOG_DATA);
   readonly productNames = this.data.payments.map(p => p.product!.name);
 
-  dataSignal = toSignal(this.readRepository.loadDataAction$.pipe(
+  dataSignal: Signal<ImportData[] | undefined> = toSignal(this.readRepository.loadDataAction$.pipe(
     map(scan =>
       Object.fromEntries(
         scan.map(v => [v.productName, new ScanResult(v.productName, v.scanValue, this.productNames.indexOf(v.productName) == -1)])
@@ -57,17 +61,19 @@ export class PaymentsImportDialogComponent implements OnInit {
     ),
     switchMap(scan => {
       const found = this.data.payments.map(
-        v => {return {product: v, scan: scan[v.product!.name!]}}
+        v => {return {paymentId: v.id, scan: scan[v.product!.name!]}}
       ).filter(v => !!v.scan)
       const notFound = Object.entries(scan)
         .filter(([key]) => this.productNames.indexOf(key) == -1)
-        .map(([, scan]) => {return {product: undefined, scan: new ScanResult(scan.productName, scan.scanValue, true)}})
+        .map(([, scan]) => {return {paymentId: undefined, scan: new ScanResult(scan.productName, scan.scanValue, true)}})
       return of([... found, ... notFound])
     }),
   ))
 
   importSubject = new Subject<PaymentImport[]>()
+
   importAction$: Observable<RowsAffectedResult> = this.importSubject.pipe(
+    tap(() => this.importLoadingSignal.set(true)),
     switchMap(v =>
       this.dataSource.patchBulkResponse<RowsAffectedResult>("payments:import", v).pipe(
         switchMap(data => {
@@ -77,12 +83,14 @@ export class PaymentsImportDialogComponent implements OnInit {
           const message = `Network error: ${RepositoryUtils.getNetworkErrorMessage(err)}`;
           this.messagesService.reportMessage(new ErrorMessage( message));
           return of({ rowsAffected: 0 } as RowsAffectedResult)
-        })
+        }),
       )
-    )
+    ),
+    finalize(() => this.importLoadingSignal.set(false))
   )
 
-  loadingSignal = computed(() => this.readRepository.loadingSignal())
+  importLoadingSignal = signal(false)
+  loadingSignal = computed(() => this.readRepository.loadingSignal() || this.importLoadingSignal())
 
   ngOnInit(): void {
     const httpParams = new HttpParams().append("objectName", this.data.paymentObject!.name!)

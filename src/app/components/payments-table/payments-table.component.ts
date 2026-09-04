@@ -40,7 +40,6 @@ import {
 import {MatDialog} from "@angular/material/dialog";
 import {PaymentsImportDialogComponent} from "../payments-import-dialog/payments-import-dialog.component";
 import {PaymentObject} from "../../model/payment-object";
-import {Product} from "../../model/product";
 
 enum InlineControl {
   ProductCounter = 'productCounterControl',
@@ -400,6 +399,7 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
         paymentObject: this.paymentObject()!,
         payments: this.payments().filter(v => !!v) as Payment[],
       },
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {

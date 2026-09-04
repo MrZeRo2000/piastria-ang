@@ -2,20 +2,27 @@
 <mat-dialog-content>
   <app-core-loading-progress [loading]="loadingSignal()"></app-core-loading-progress>
   @if (!this.readRepository.loadingSignal()) {
-    <mat-selection-list #shoes>
-      @for (scanResult of dataSignal(); track scanResult.product) {
-        <mat-list-option [selected]="!scanResult.scan.disabled" [disabled]="scanResult.scan.disabled">
+    <mat-selection-list>
+      @for (importItem of dataSignal(); track importItem) {
+        <mat-list-option [selected]="!importItem.scan.disabled" [disabled]="importItem.scan.disabled">
           <div class="row">
             <div class=description-cell>
-              {{scanResult.scan.productName}}
+              {{importItem.scan.productName}}
             </div>
             <div class="amount-cell">
-              {{scanResult.scan.scanValue | number : '1.2-2'}}
+              {{importItem.scan.scanValue | number : '1.2-2'}}
             </div>
           </div>
         </mat-list-option>
       }
     </mat-selection-list>
+    <div class="row">
+      <strong>
+        <div class="description-cell">
+          Total
+        </div>
+      </strong>
+    </div>
   }
 
 </mat-dialog-content>
