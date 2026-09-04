@@ -3,14 +3,14 @@
   <app-core-loading-progress [loading]="loadingSignal()"></app-core-loading-progress>
   @if (!this.readRepository.loadingSignal()) {
     <mat-selection-list #shoes>
-      @for (scanResult of dataSignal(); track scanResult.productName) {
-        <mat-list-option [selected]="!scanResult.disabled" [disabled]="scanResult.disabled">
+      @for (scanResult of dataSignal(); track scanResult.product) {
+        <mat-list-option [selected]="!scanResult.scan.disabled" [disabled]="scanResult.scan.disabled">
           <div class="row">
             <div class=description-cell>
-              {{scanResult.productName}}
+              {{scanResult.scan.productName}}
             </div>
             <div class="amount-cell">
-              {{scanResult.scanValue | number : '1.2-2'}}
+              {{scanResult.scan.scanValue | number : '1.2-2'}}
             </div>
           </div>
         </mat-list-option>
