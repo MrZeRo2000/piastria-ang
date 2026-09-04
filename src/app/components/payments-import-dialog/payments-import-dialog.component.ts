@@ -14,9 +14,15 @@ import {HttpParams} from "@angular/common/http";
 import {MatListOption, MatSelectionList} from "@angular/material/list";
 import {DecimalPipe} from "@angular/common";
 import {toSignal} from "@angular/core/rxjs-interop";
-import {map, of, switchMap, tap} from "rxjs";
-import {ScanResult} from "../../model/scan";
+import {catchError, map, Observable, of, Subject, switchMap, tap} from "rxjs";
+import {PaymentImport, ScanResult} from "../../model/scan";
 import {Payment} from "../../model/payment";
+import {RowsAffectedResult} from "../../model/rows-affected-result";
+import {RestDataSource} from "../../data-source/rest-data-source";
+import {MessagesService} from "../../messages/messages.service";
+import {RepositoryUtils} from "../../core/repository/repository-utils";
+import {CrudErrorResult, CrudStatus} from "../../core/repository/crud-repository";
+import {ErrorMessage} from "../../messages/message.model";
 
 @Component({
   selector: 'app-payments-import-dialog',
@@ -35,9 +41,14 @@ import {Payment} from "../../model/payment";
   styleUrl: './payments-import-dialog.component.scss',
 })
 export class PaymentsImportDialogComponent implements OnInit {
+  private readonly dataSource: RestDataSource = inject(RestDataSource)
+  private readonly messagesService: MessagesService = inject(MessagesService)
+
   readonly readRepository = inject(SCAN_LATEST_READ_REPOSITORY)
+
   readonly data = inject<{paymentObject: PaymentObject, payments: Payment[]}>(MAT_DIALOG_DATA);
   readonly productNames = this.data.payments.map(p => p.product!.name);
+
   dataSignal = toSignal(this.readRepository.loadDataAction$.pipe(
     map(scan =>
       Object.fromEntries(
@@ -54,6 +65,23 @@ export class PaymentsImportDialogComponent implements OnInit {
       return of([... found, ... notFound])
     }),
   ))
+
+  importSubject = new Subject<PaymentImport[]>()
+  importAction$: Observable<RowsAffectedResult> = this.importSubject.pipe(
+    switchMap(v =>
+      this.dataSource.patchBulkResponse<RowsAffectedResult>("payments:import", v).pipe(
+        switchMap(data => {
+          return of(data.body as RowsAffectedResult)
+        }),
+        catchError(err => {
+          const message = `Network error: ${RepositoryUtils.getNetworkErrorMessage(err)}`;
+          this.messagesService.reportMessage(new ErrorMessage( message));
+          return of({ rowsAffected: 0 } as RowsAffectedResult)
+        })
+      )
+    )
+  )
+
   loadingSignal = computed(() => this.readRepository.loadingSignal())
 
   ngOnInit(): void {

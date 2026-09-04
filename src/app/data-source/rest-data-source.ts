@@ -29,6 +29,10 @@ export class RestDataSource {
     return this.http.patch<T>(this.restUrl + resourceName + '/' + id, body, { observe: 'response' });
   }
 
+  patchBulkResponse<T>(resourceName: string, body: unknown): Observable<HttpResponse<T>> {
+    return this.http.patch<T>(this.restUrl + resourceName, body, { observe: 'response' });
+  }
+
   postFormDataResponse<T>(resourceName: string, formData: FormData): Observable<HttpResponse<T>> {
     // Don't set Content-Type for FormData: the browser must set it (including the
     // multipart boundary), so we only add the Accept header.
