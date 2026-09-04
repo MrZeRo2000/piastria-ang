@@ -35,6 +35,7 @@ import {ScanResult} from "../../model/scan";
 })
 export class PaymentsImportDialogComponent implements OnInit {
   readonly readRepository = inject(SCAN_LATEST_READ_REPOSITORY)
+  readonly data = inject<{paymentObject: PaymentObject, productNames: string[]}>(MAT_DIALOG_DATA);
   dataSignal = toSignal(this.readRepository.loadDataAction$.pipe(
     tap(() => {
       console.log(`starting signal with data ${JSON.stringify(this.data)}`)
@@ -55,7 +56,6 @@ export class PaymentsImportDialogComponent implements OnInit {
     }),
   ))
   loadingSignal = computed(() => this.readRepository.loadingSignal())
-  readonly data = inject<{paymentObject: PaymentObject, productNames: string[]}>(MAT_DIALOG_DATA);
 
   ngOnInit(): void {
     console.log(`data passed: ${JSON.stringify(this.data)}`);
