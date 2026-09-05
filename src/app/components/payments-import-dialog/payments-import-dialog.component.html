@@ -30,6 +30,6 @@
 
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button matButton="filled" class="confirm-button" mat-dialog-close="true" [disabled]="loadingSignal()">Import</button>
-  <button matButton mat-dialog-close>Cancel</button>
+  <button matButton="filled" class="confirm-button" [disabled]="loadingSignal()" (click)="importOnClick()">Import</button>
+  <button matButton mat-dialog-close [disabled]="loadingSignal()">Cancel</button>
 </mat-dialog-actions>

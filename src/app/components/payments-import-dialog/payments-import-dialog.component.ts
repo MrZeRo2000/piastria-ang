@@ -106,4 +106,11 @@ export class PaymentsImportDialogComponent implements OnInit {
     const httpParams = new HttpParams().append("objectName", this.data.paymentObject!.name!)
     this.readRepository.loadData({ params: httpParams })
   }
+
+  importOnClick(): void {
+    console.log(`Importing data: ${JSON.stringify(this.importModel())}`)
+    const importDataValue: PaymentImport[] = this.importModel().items
+      .map(v => {return {paymentId: v.paymentId, paymentAmount: v.scan.scanValue} as PaymentImport})
+    this.importSubject.next(importDataValue)
+  }
 }
