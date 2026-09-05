@@ -22,11 +22,15 @@ import {RestDataSource} from "../../data-source/rest-data-source";
 import {MessagesService} from "../../messages/messages.service";
 import {RepositoryUtils} from "../../core/repository/repository-utils";
 import {ErrorMessage} from "../../messages/message.model";
-import {FormsModule} from "@angular/forms";
+import {form, FormField} from '@angular/forms/signals';
 
 interface ImportDataItem {
   paymentId?: number
   scan: ScanResult
+}
+
+interface ImportDataModel {
+  items: ImportDataItem[]
 }
 
 @Component({
@@ -41,7 +45,7 @@ interface ImportDataItem {
     MatSelectionList,
     MatListOption,
     DecimalPipe,
-    FormsModule
+    FormField,
   ],
   templateUrl: './payments-import-dialog.component.html',
   styleUrl: './payments-import-dialog.component.scss',
@@ -69,6 +73,12 @@ export class PaymentsImportDialogComponent implements OnInit {
       return of([... found, ... notFound])
     }),
   ), {initialValue: []})
+
+  importModel = signal<ImportDataModel>({items: []})
+  importForm = form(this.importModel)
+  importTotals = computed(() =>
+    this.importForm().value().items.reduce((a, v) => a + v.scan.scanValue, 0)
+  )
 
   importSubject = new Subject<PaymentImport[]>()
 

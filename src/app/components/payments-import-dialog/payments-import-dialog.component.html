@@ -2,26 +2,29 @@
 <mat-dialog-content>
   <app-core-loading-progress [loading]="loadingSignal()"></app-core-loading-progress>
   @if (!this.readRepository.loadingSignal()) {
-    <mat-selection-list>
-      @for (importItem of dataSignal(); track importItem) {
-        <mat-list-option [selected]="!importItem.scan.disabled" [disabled]="importItem.scan.disabled">
-          <div class="row">
-            <div class=description-cell>
-              {{importItem.scan.productName}}
+      <mat-selection-list [formField]="importForm.items">
+        @for (importItem of dataSignal(); track importItem) {
+          <mat-list-option [value]="importItem" togglePosition="before" [selected]="!importItem.scan.disabled" [disabled]="importItem.scan.disabled">
+            <div class="row">
+              <div class=description-cell>
+                {{importItem.scan.productName}}
+              </div>
+              <div class="amount-cell">
+                {{importItem.scan.scanValue | number : '1.2-2'}}
+              </div>
             </div>
-            <div class="amount-cell">
-              {{importItem.scan.scanValue | number : '1.2-2'}}
-            </div>
-          </div>
-        </mat-list-option>
-      }
-    </mat-selection-list>
-    <div class="row">
-      <strong>
-        <div class="description-cell">
-          Total
-        </div>
-      </strong>
+          </mat-list-option>
+        }
+      </mat-selection-list>
+
+    <hr>
+    <div class="row row-summary mdc-list-item">
+      <div class="description-cell">
+        <strong>Total</strong>
+      </div>
+      <div class="amount-cell">
+        <strong>{{importTotals() | number : '1.2-2'}}</strong>
+      </div>
     </div>
   }
 
