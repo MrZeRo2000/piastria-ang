@@ -1,9 +1,9 @@
-import {Component, computed, inject, OnInit, Signal, signal} from '@angular/core';
+import {Component, computed, effect, inject, OnInit, Signal, signal} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
   MatDialogClose,
-  MatDialogContent,
+  MatDialogContent, MatDialogRef,
   MatDialogTitle
 } from "@angular/material/dialog";
 import {MatButton} from "@angular/material/button";
@@ -21,7 +21,7 @@ import {RowsAffectedResult} from "../../model/rows-affected-result";
 import {RestDataSource} from "../../data-source/rest-data-source";
 import {MessagesService} from "../../messages/messages.service";
 import {RepositoryUtils} from "../../core/repository/repository-utils";
-import {ErrorMessage} from "../../messages/message.model";
+import {ErrorMessage, SuccessMessage} from "../../messages/message.model";
 import {form, FormField} from '@angular/forms/signals';
 
 interface ImportDataItem {
@@ -51,6 +51,7 @@ interface ImportDataModel {
   styleUrl: './payments-import-dialog.component.scss',
 })
 export class PaymentsImportDialogComponent implements OnInit {
+  private readonly dialogRef = inject(MatDialogRef);
   private readonly dataSource: RestDataSource = inject(RestDataSource)
   private readonly messagesService: MessagesService = inject(MessagesService)
 
@@ -94,13 +95,30 @@ export class PaymentsImportDialogComponent implements OnInit {
           this.messagesService.reportMessage(new ErrorMessage( message));
           return of({ rowsAffected: 0 } as RowsAffectedResult)
         }),
+        finalize(() => {
+          console.log('Finalize')
+          this.importLoadingSignal.set(false)
+        })
       )
     ),
-    finalize(() => this.importLoadingSignal.set(false))
+
   )
+  importActionSignal = toSignal(this.importAction$)
 
   importLoadingSignal = signal(false)
   loadingSignal = computed(() => this.readRepository.loadingSignal() || this.importLoadingSignal())
+
+  constructor() {
+    effect(() => {
+      const importActionData = this.importActionSignal()
+      console.log(`Import action data: ${JSON.stringify(importActionData)}`)
+      const rowsAffected = importActionData?.rowsAffected ?? 0
+      if (rowsAffected > 0) {
+        this.messagesService.reportMessage(new SuccessMessage(`Successfully updated ${rowsAffected} rows`))
+        this.dialogRef.close(this.importModel().items)
+      }
+    })
+  }
 
   ngOnInit(): void {
     const httpParams = new HttpParams().append("objectName", this.data.paymentObject!.name!)

@@ -404,8 +404,9 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      if (result !== undefined) {
-        console.log('Has some result');
+      if (result) {
+        console.log(`Has some result: ${JSON.stringify(result)}`);
+        this.loadRepositoryData()
       }
     });
   }

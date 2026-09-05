@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>Import payments</h2>
 <mat-dialog-content>
   <app-core-loading-progress [loading]="loadingSignal()"></app-core-loading-progress>
-  @if (!this.readRepository.loadingSignal()) {
+  @if (!loadingSignal()) {
       <mat-selection-list [formField]="importForm.items">
         @for (importItem of dataSignal(); track importItem) {
           <mat-list-option [value]="importItem" togglePosition="before" [selected]="!importItem.scan.disabled" [disabled]="importItem.scan.disabled">
