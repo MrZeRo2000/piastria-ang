@@ -66,7 +66,7 @@ export class PaymentsImportDialogComponent implements OnInit {
         data.map(v => [v.productName, new ScanResult(v.productName, v.scanValue, this.productNames.indexOf(v.productName) == -1)])
       ) as {[index: string]: ScanResult}
       const found = this.data.payments.map(
-        v => {return {paymentId: v.id!, scan: {... scan[v.product!.name!], disabled: v.paymentAmount ?? 0 === scan[v.product!.name!].scanValue} as ScanResult}}
+        v => {return {paymentId: v.id!, scan: {... scan[v.product!.name!], disabled: v.paymentAmount === scan[v.product!.name!]?.scanValue} as ScanResult}}
       ).filter(v => !!v.scan.scanValue)
       const notFound = Object.entries(scan)
         .filter(([key]) => this.productNames.indexOf(key) == -1)
