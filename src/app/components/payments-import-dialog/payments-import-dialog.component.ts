@@ -23,7 +23,6 @@ import {MessagesService} from "../../messages/messages.service";
 import {RepositoryUtils} from "../../core/repository/repository-utils";
 import {ErrorMessage, SuccessMessage} from "../../messages/message.model";
 import {form, FormField} from '@angular/forms/signals';
-import {MatTooltip} from "@angular/material/tooltip";
 
 interface ImportDataItem {
   paymentId?: number
@@ -67,11 +66,12 @@ export class PaymentsImportDialogComponent implements OnInit {
         data.map(v => [v.productName, new ScanResult(v.productName, v.scanValue, this.productNames.indexOf(v.productName) == -1)])
       ) as {[index: string]: ScanResult}
       const found = this.data.payments.map(
-        v => {return {paymentId: v.id!, scan: scan[v.product!.name!]}}
-      ).filter(v => !!v.scan)
+        v => {return {paymentId: v.id!, scan: {... scan[v.product!.name!], disabled: v.paymentAmount ?? 0 === scan[v.product!.name!].scanValue} as ScanResult}}
+      ).filter(v => !!v.scan.scanValue)
       const notFound = Object.entries(scan)
         .filter(([key]) => this.productNames.indexOf(key) == -1)
-        .map(([, scan]) => {return {paymentId: undefined, scan: new ScanResult(scan.productName, scan.scanValue, true)}})
+        .map(([, scan]) => {return {paymentId: undefined, scan: {... scan, disabled: true}}})
+        .filter(v => !!v.scan.scanValue)
       return of([... found, ... notFound])
     }),
   ), {initialValue: []})
