@@ -3,20 +3,22 @@
 <mat-dialog-content>
   <app-core-loading-progress [loading]="loadingSignal()"></app-core-loading-progress>
   @if (!loadingSignal()) {
-    <mat-selection-list [formField]="importForm.items">
-      @for (importItem of data; track importItem) {
-        <mat-list-option [value]="importItem" togglePosition="before" [selected]="!importItem.scan.disabled" [disabled]="importItem.scan.disabled">
-          <span class="row">
-            <span class=description-cell>
-              {{importItem.scan.productName}}
+    @if (data.length > 0) {
+      <mat-selection-list [formField]="importForm.items">
+        @for (importItem of data; track importItem) {
+          <mat-list-option [value]="importItem" togglePosition="before" [selected]="!importItem.scan.disabled" [disabled]="importItem.scan.disabled">
+            <span class="row">
+              <span class=description-cell>
+                {{importItem.scan.productName}}
+              </span>
+              <span class="amount-cell">
+                {{importItem.scan.scanValue | number : '1.2-2'}}
+              </span>
             </span>
-            <span class="amount-cell">
-              {{importItem.scan.scanValue | number : '1.2-2'}}
-            </span>
-          </span>
-        </mat-list-option>
-      }
-    </mat-selection-list>
+          </mat-list-option>
+        }
+      </mat-selection-list>
+    }
 
     @if(data.length === 0) {
       <div class="row nodata-cell">
