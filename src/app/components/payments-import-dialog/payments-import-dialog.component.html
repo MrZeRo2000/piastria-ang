@@ -1,30 +1,40 @@
 <h2 mat-dialog-title>Import payments</h2>
+@let data = dataSignal();
 <mat-dialog-content>
   <app-core-loading-progress [loading]="loadingSignal()"></app-core-loading-progress>
   @if (!loadingSignal()) {
-      <mat-selection-list [formField]="importForm.items">
-        @for (importItem of dataSignal(); track importItem) {
-          <mat-list-option [value]="importItem" togglePosition="before" [selected]="!importItem.scan.disabled" [disabled]="importItem.scan.disabled">
-            <span class="row">
-              <span class=description-cell>
-                {{importItem.scan.productName}}
-              </span>
-              <span class="amount-cell">
-                {{importItem.scan.scanValue | number : '1.2-2'}}
-              </span>
+    <mat-selection-list [formField]="importForm.items">
+      @for (importItem of data; track importItem) {
+        <mat-list-option [value]="importItem" togglePosition="before" [selected]="!importItem.scan.disabled" [disabled]="importItem.scan.disabled">
+          <span class="row">
+            <span class=description-cell>
+              {{importItem.scan.productName}}
             </span>
-          </mat-list-option>
-        }
-      </mat-selection-list>
+            <span class="amount-cell">
+              {{importItem.scan.scanValue | number : '1.2-2'}}
+            </span>
+          </span>
+        </mat-list-option>
+      }
+    </mat-selection-list>
 
-    <div class="row row-summary mdc-list-item">
-      <div class="description-cell">
-        <strong>Total</strong>
+    @if(data.length === 0) {
+      <div class="row nodata-cell">
+        <mat-icon class="material-symbols-outlined">
+          search_off
+        </mat-icon>
+        No data
       </div>
-      <div class="amount-cell">
-        <strong>{{importTotals() | number : '1.2-2'}}</strong>
+    } @else {
+      <div class="row row-summary mdc-list-item">
+        <div class="description-cell">
+          <strong>Total</strong>
+        </div>
+        <div class="amount-cell">
+          <strong>{{importTotals() | number : '1.2-2'}}</strong>
+        </div>
       </div>
-    </div>
+    }
   }
 
 </mat-dialog-content>

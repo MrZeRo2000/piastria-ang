@@ -29,3 +29,9 @@
   justify-content: flex-end;
 }
 
+.nodata-cell {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+}
+

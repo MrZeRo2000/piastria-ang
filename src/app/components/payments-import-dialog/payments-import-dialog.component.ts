@@ -23,6 +23,7 @@ import {MessagesService} from "../../messages/messages.service";
 import {RepositoryUtils} from "../../core/repository/repository-utils";
 import {ErrorMessage, SuccessMessage} from "../../messages/message.model";
 import {form, FormField} from '@angular/forms/signals';
+import {MatIcon} from "@angular/material/icon";
 
 interface ImportDataItem {
   paymentId?: number
@@ -46,6 +47,7 @@ interface ImportDataModel {
     MatListOption,
     DecimalPipe,
     FormField,
+    MatIcon,
   ],
   templateUrl: './payments-import-dialog.component.html',
   styleUrl: './payments-import-dialog.component.scss',
