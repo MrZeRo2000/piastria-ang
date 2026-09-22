@@ -1,8 +1,10 @@
-<h2 mat-dialog-title>Import payments</h2>
 @let data = dataSignal();
+@let loading = loadingSignal();
+
+<h2 mat-dialog-title>Import payments</h2>
 <mat-dialog-content>
-  <app-core-loading-progress [loading]="loadingSignal()"></app-core-loading-progress>
-  @if (!loadingSignal()) {
+  <app-core-loading-progress [loading]="loading"></app-core-loading-progress>
+  @if (!loading) {
     @if (data.length > 0) {
       <mat-selection-list [formField]="importForm.items">
         @for (importItem of data; track importItem) {
@@ -41,6 +43,10 @@
 
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button matButton="filled" class="confirm-button" [disabled]="loadingSignal() || (importTotals() === 0)" (click)="importOnClick()">Import</button>
-  <button matButton mat-dialog-close [disabled]="loadingSignal()">Cancel</button>
+  @if(!loading) {
+    @if(data.length > 0) {
+      <button matButton="filled" class="confirm-button" [disabled]="importTotals() === 0" (click)="importOnClick()">Import</button>
+    }
+    <button matButton mat-dialog-close>Close</button>
+  }
 </mat-dialog-actions>
