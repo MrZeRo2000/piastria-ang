@@ -1,6 +1,7 @@
 {
   "name": "piastria-ang",
-  "version": "1.5.6",
+  "version": "1.5.7",
+  "backendVersion": "0.10.4",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --no-hmr",

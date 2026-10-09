@@ -1,3 +1,18 @@
 .app-info {
   text-align: right;
 }
+
+.version-chip {
+  --mat-chip-label-text-color: var(--mat-sys-on-surface);
+  --mat-chip-elevated-container-color: transparent;
+}
+
+.version-chip-warning {
+  --mat-chip-label-text-color: var(--mat-sys-surface);
+  --mat-chip-elevated-container-color: var(--app-color-warning);
+}
+
+.version-chip-error {
+  --mat-chip-label-text-color: var(--mat-sys-on-error);
+  --mat-chip-elevated-container-color: var(--mat-sys-error);
+}

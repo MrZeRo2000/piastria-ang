@@ -2,6 +2,12 @@
   @if (readRepository.loadingSignal()) {
     ...
   } @else {
-    <small>({{dataSignal()[0].version}})</small>
+    @if (versionStatus(); as status) {
+      <mat-chip
+        class="version-chip"
+        [ngClass]="{'version-chip-warning': status.minorDifference, 'version-chip-error': status.majorDifference}">
+        {{status.backendVersion}}
+      </mat-chip>
+    }
   }
 </div>

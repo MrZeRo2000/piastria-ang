@@ -8,6 +8,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MessagesService} from "../../messages/messages.service";
 import {SuccessMessage} from "../../messages/message.model";
+import {BackendVersionService} from "../../utils/backend-version.service";
 import {
   APP_INFO_READ_REPOSITORY,
   BACKUP_DATABASE_CRUD_REPOSITORY,
@@ -29,6 +30,7 @@ export class BackupDatabaseButtonComponent {
   private backupInfoRepository = inject(BACKUP_INFO_READ_REPOSITORY)
   public appInfoRepository = inject(APP_INFO_READ_REPOSITORY);
   private messagesService = inject(MessagesService)
+  backendIncompatible = inject(BackendVersionService).incompatible;
 
   appInfoSignal = this.appInfoRepository.dataSignal
 

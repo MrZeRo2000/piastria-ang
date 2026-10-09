@@ -1,9 +1,8 @@
 <button matIconButton
         (click)="onClick()"
-        [disabled]="backupDatabaseRepository.loadingSignal() || !appInfoSignal()[0] "
+        [disabled]="backupDatabaseRepository.loadingSignal() || !appInfoSignal()[0] || backendIncompatible()"
         [matTooltip]="backupTooltip()"
         matTooltipPosition="before"
         aria-label="Backup database">
   <mat-icon>save</mat-icon>
 </button>
-
