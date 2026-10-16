@@ -499,12 +499,12 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
     });
   }
 
-  archiveReceiptsOnClick(event: Event, files: ReceiptFileInfo[]): void {
+  archiveReceiptsOnClick(event: Event, receiptFiles: ReceiptFileInfo[]): void {
     event.preventDefault();
     const dialogRef = this.importDialog.open(PaymentsArchiveReceiptsComponent, {
       data: {
         paymentObject: this.paymentObject()!,
-        files,
+        receiptFiles,
       },
       disableClose: true
     });

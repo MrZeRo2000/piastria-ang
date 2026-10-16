@@ -1,28 +1,67 @@
-import { Component } from '@angular/core';
-import {DecimalPipe} from "@angular/common";
+import {Component, inject, Input, signal} from '@angular/core';
+import {DatePipe, DecimalPipe} from "@angular/common";
 import {LoadingProgressComponent} from "../../core/components/loading-progress/loading-progress.component";
 import {MatButton} from "@angular/material/button";
-import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
-import {MatIcon} from "@angular/material/icon";
-import {MatListOption, MatSelectionList} from "@angular/material/list";
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle
+} from "@angular/material/dialog";
+import {MatList, MatListItem} from "@angular/material/list";
+import {ReceiptFileInfo} from "../../model/receipt-file-info";
+import {PaymentObject} from "../../model/payment-object";
+import {ARCHIVE_RECEIPT_CRUD_REPOSITORY} from "../../repository/repository-tokens";
+import {CrudActionType, CrudStatus} from "../../core/repository/crud-repository";
+import {tap} from "rxjs";
+import {MessagesService} from "../../messages/messages.service";
+import {SuccessMessage} from "../../messages/message.model";
+import {toSignal} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-payments-archive-receipts',
-    imports: [
-        DecimalPipe,
-        LoadingProgressComponent,
-        MatButton,
-        MatDialogActions,
-        MatDialogClose,
-        MatDialogContent,
-        MatDialogTitle,
-        MatIcon,
-        MatListOption,
-        MatSelectionList
-    ],
+  imports: [
+    MatButton,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    MatDialogTitle,
+    MatList,
+    MatListItem,
+    DatePipe
+  ],
   templateUrl: './payments-archive-receipts.component.html',
   styleUrl: './payments-archive-receipts.component.scss',
 })
 export class PaymentsArchiveReceiptsComponent {
+  private readonly dialogRef = inject(MatDialogRef);
+  readonly archiveRepository = inject(ARCHIVE_RECEIPT_CRUD_REPOSITORY);
+  private readonly messagesService: MessagesService = inject(MessagesService)
 
+  readonly data = inject<{paymentObject: PaymentObject, receiptFiles: ReceiptFileInfo[]}>(MAT_DIALOG_DATA);
+  readonly files = this.data.receiptFiles;
+
+  archiveLoadingSignal = signal(false)
+
+  constructor() {
+    toSignal(this.archiveAction$)
+  }
+
+  archiveAction$ = this.archiveRepository.crudAction$.pipe(
+    tap(archiveResult => {
+      this.archiveLoadingSignal.set(false)
+      if (archiveResult.status == CrudStatus.Success) {
+        this.messagesService.reportMessage(new SuccessMessage(archiveResult.data!.message!))
+        this.dialogRef.close();
+      }
+    })
+
+  );
+
+  archiveOnClick(): void {
+    this.archiveLoadingSignal.set(true);
+    this.archiveRepository.execute({type: CrudActionType.Insert, payload: {}})
+  }
 }

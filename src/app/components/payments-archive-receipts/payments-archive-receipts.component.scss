@@ -1,0 +1,22 @@
+.row {
+  display: flex;
+  flex: 0 0;
+  flex-direction: row;
+  align-items: center;
+}
+
+.name-cell {
+  display: block;
+  flex-grow: 1;
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.datetime-cell {
+  margin-left: 1rem;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: flex-end;
+}

@@ -79,14 +79,18 @@ export const RECEIPT_FILES_READ_REPOSITORY = new InjectionToken<ReadRepository<R
   'RECEIPT_FILES_READ_REPOSITORY',
   {
     providedIn: 'root',
-    factory: () => new ReadRepository(inject(RestDataSource), inject(MessagesService), 'payments:list_receipt')
+    factory: () => new ReadRepository(
+      inject(RestDataSource),
+      inject(MessagesService),
+      'payments:list_receipt',
+      withDates<ReceiptFileInfo>('modifiedDate'))
   });
 
 export const ARCHIVE_RECEIPT_CRUD_REPOSITORY = new InjectionToken<CrudRepository<MessageResult>>(
   'ARCHIVE_RECEIPT_CRUD_REPOSITORY',
   {
     providedIn: 'root',
-    factory: () => new CrudRepository(inject(RestDataSource), inject(MessagesService), 'payments:archive_receipt')
+    factory: () => new CrudRepository(inject(RestDataSource), inject(MessagesService), 'payments:archive_receipt1')
   });
 
 export const PAYMENT_OBJECT_TOTALS_READ_REPOSITORY = new InjectionToken<ReadRepository<PaymentObjectTotals>>(
