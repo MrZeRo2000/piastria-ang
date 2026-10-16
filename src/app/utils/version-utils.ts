@@ -3,8 +3,8 @@ import packageJson from '../../../package.json';
 
 /**
  * Compares the backend version against the one this frontend supports (package.json "backendVersion").
- * Minor difference: the backend is older only in the last version segment (still compatible, show a warning).
- * Major difference: any other mismatch (incompatible, block the app).
+ * Major difference: the 1st or 2nd segment differs, in either direction (incompatible, block the app).
+ * Minor difference: only the 3rd segment differs, in either direction (tolerated, show a warning).
  */
 export function calcBackendVersionStatus(
   backendVersion: string,
@@ -22,7 +22,7 @@ export function calcBackendVersionStatus(
     const ncv = parseInt(cv[i], 10);
     const nbv = parseInt(bv[i], 10);
     if (ncv !== nbv) {
-      const minor = i === k - 1 && ncv > nbv;
+      const minor = i >= 2;
       return {...status, minorDifference: minor, majorDifference: !minor};
     }
   }

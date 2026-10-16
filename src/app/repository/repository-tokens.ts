@@ -16,6 +16,7 @@ import {PaymentRep} from "../model/payment-rep";
 import {CrudRepository} from "../core/repository/crud-repository";
 import {RowsAffectedResult} from "../model/result";
 import {ScanResult} from "../model/scan";
+import {ReceiptFileInfo} from "../model/receipt-file-info";
 
 /**
  * Links each payment to its previous-period counterpart and builds the
@@ -72,6 +73,20 @@ export const BACKUP_DATABASE_CRUD_REPOSITORY = new InjectionToken<CrudRepository
   {
     providedIn: 'root',
     factory: () => new CrudRepository(inject(RestDataSource), inject(MessagesService), 'app:backup_database')
+  });
+
+export const RECEIPT_FILES_READ_REPOSITORY = new InjectionToken<ReadRepository<ReceiptFileInfo>>(
+  'RECEIPT_FILES_READ_REPOSITORY',
+  {
+    providedIn: 'root',
+    factory: () => new ReadRepository(inject(RestDataSource), inject(MessagesService), 'payments:list_receipt')
+  });
+
+export const ARCHIVE_RECEIPT_CRUD_REPOSITORY = new InjectionToken<CrudRepository<MessageResult>>(
+  'ARCHIVE_RECEIPT_CRUD_REPOSITORY',
+  {
+    providedIn: 'root',
+    factory: () => new CrudRepository(inject(RestDataSource), inject(MessagesService), 'payments:archive_receipt')
   });
 
 export const PAYMENT_OBJECT_TOTALS_READ_REPOSITORY = new InjectionToken<ReadRepository<PaymentObjectTotals>>(

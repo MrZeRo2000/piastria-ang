@@ -1,4 +1,4 @@
-import {Component, computed, effect, ElementRef, inject, input, signal, viewChildren} from '@angular/core';
+import {Component, computed, effect, ElementRef, inject, input, OnInit, signal, viewChildren} from '@angular/core';
 import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {catchError, of, Subject, switchMap, tap} from 'rxjs';
 import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
@@ -35,7 +35,7 @@ import {LoadingProgressComponent} from '../../core/components/loading-progress/l
 import {
   PAYMENT_CRUD_REPOSITORY,
   PAYMENT_DUPLICATE_PERIOD_REPOSITORY,
-  PAYMENT_REFS_READ_REPOSITORY
+  PAYMENT_REFS_READ_REPOSITORY, RECEIPT_FILES_READ_REPOSITORY
 } from '../../repository/repository-tokens';
 import {MatDialog} from "@angular/material/dialog";
 import {PaymentsImportDialogComponent} from "../payments-import-dialog/payments-import-dialog.component";
@@ -45,9 +45,11 @@ import {MessagesService} from "../../messages/messages.service";
 import {AmountResult} from "../../model/result";
 import {RepositoryUtils} from "../../core/repository/repository-utils";
 import {ErrorMessage} from "../../messages/message.model";
-import {CdkDrag, CdkDragHandle, CdkDropList} from "@angular/cdk/drag-drop";
+import {CdkDragHandle, CdkDropList} from "@angular/cdk/drag-drop";
 import {DragGripComponent} from "../../core/components/drag-grip/drag-grip.component";
 import {CommonEntity} from "../../core/entity/common-entity";
+import {ReceiptFileInfo} from "../../model/receipt-file-info";
+import {PaymentsArchiveReceiptsComponent} from "../payments-archive-receipts/payments-archive-receipts.component";
 
 enum InlineControl {
   ProductCounter = 'productCounterControl',
@@ -87,10 +89,11 @@ enum InlineControl {
   providers: [AmountPipe],
   styleUrls: ['./payments-table.component.scss']
 })
-export class PaymentsTableComponent extends CommonEditableTableComponent<PaymentRefs, Payment> {
+export class PaymentsTableComponent extends CommonEditableTableComponent<PaymentRefs, Payment> implements OnInit {
   private fb = inject(FormBuilder)
   private amountPipe = inject(AmountPipe)
   private duplicateRepository = inject(PAYMENT_DUPLICATE_PERIOD_REPOSITORY)
+  private receiptRepository = inject(RECEIPT_FILES_READ_REPOSITORY)
   private readonly dataSource: RestDataSource = inject(RestDataSource)
   private readonly messagesService: MessagesService = inject(MessagesService)
   readonly importDialog = inject(MatDialog);
@@ -249,6 +252,7 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
   )
 
   updateAmountSignal = toSignal(this.updateAmountAction$)
+  receiptFilesSignal = this.receiptRepository.dataSignal
 
   constructor() {
     super(
@@ -331,12 +335,21 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
     };
   }
 
+  ngOnInit() {
+    super.ngOnInit();
+
+    this.receiptRepository.loadData({
+      params: new HttpParams()
+        .append('paymentObjectId', this.paymentObject()!.id!.toString())
+    })
+  }
+
   protected override loadRepositoryData(): void {
     this.readRepository.loadData({
       params: new HttpParams()
         .append('paymentObjectId', this.paymentObject()!.id!.toString())
         .append('paymentPeriodDate', this.convertedPeriodDate()!.toJSON())
-    });
+    })
   }
 
   protected override getPersistData(): Payment {
@@ -482,6 +495,24 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
       if (result) {
         console.log(`Has some result: ${JSON.stringify(result)}`);
         this.loadRepositoryData()
+      }
+    });
+  }
+
+  archiveReceiptsOnClick(event: Event, files: ReceiptFileInfo[]): void {
+    event.preventDefault();
+    const dialogRef = this.importDialog.open(PaymentsArchiveReceiptsComponent, {
+      data: {
+        paymentObject: this.paymentObject()!,
+        files,
+      },
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      if (result) {
+        console.log(`Has some result: ${JSON.stringify(result)}`);
       }
     });
   }

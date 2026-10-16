@@ -7,12 +7,9 @@ describe('calcBackendVersionStatus', () => {
     expect(calc('0.10.4')).toEqual(expected(false, false));
   });
 
-  it('older patch version: minor difference', () => {
+  it('different patch version, older or newer: minor difference', () => {
     expect(calc('0.10.3')).toEqual(expected(true, false));
-  });
-
-  it('newer patch version: major difference', () => {
-    expect(calc('0.10.5')).toEqual(expected(false, true));
+    expect(calc('0.10.5')).toEqual(expected(true, false));
   });
 
   it('different minor version: major difference', () => {

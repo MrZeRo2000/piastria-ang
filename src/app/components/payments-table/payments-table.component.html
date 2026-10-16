@@ -11,10 +11,16 @@
           <mat-icon>content_copy</mat-icon>
         </button>
       }
+      @let receiptFiles = receiptFilesSignal();
       @if (payments().length) {
         <button matIconButton (click)="importPaymentsOnClick($event)" matTooltip="Import payments">
           <mat-icon>cloud_download</mat-icon>
         </button>
+        @if (receiptFiles) {
+          <button matIconButton (click)="archiveReceiptsOnClick($event, receiptFiles)" matTooltip="Archive receipts">
+            <mat-icon>folder_zip</mat-icon>
+          </button>
+        }
       }
       <app-payments-table-display-options
         [paymentsTableDisplayOptions]="displayOptions()"
