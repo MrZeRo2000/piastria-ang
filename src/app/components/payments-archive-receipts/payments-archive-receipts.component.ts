@@ -34,7 +34,8 @@ import {HttpParams} from "@angular/common/http";
     MatListItem,
     DatePipe,
     DecimalPipe,
-    MatIcon
+    MatIcon,
+    LoadingProgressComponent
   ],
   templateUrl: './payments-archive-receipts.component.html',
   styleUrl: './payments-archive-receipts.component.scss',

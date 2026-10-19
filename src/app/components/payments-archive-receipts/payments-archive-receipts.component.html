@@ -1,38 +1,46 @@
 @let loading = archiveLoadingSignal();
 <h2 mat-dialog-title>Archive receipts</h2>
 <mat-dialog-content>
-  <mat-list>
-    @for (fileItem of files; track fileItem) {
-      <mat-list-item>
-          <span class="row">
-            <span class=name-cell>
-              {{fileItem.fileName}}
+  <div class="list-container">
+    <mat-list>
+      @for (fileItem of files; track fileItem) {
+        <mat-list-item>
+            <span class="row">
+              <span class=name-cell>
+                {{fileItem.fileName}}
+              </span>
+              <span class="datetime-cell">
+                {{fileItem.modifiedDate | date:'dd.MM.yyyy HH:mm'}}
+              </span>
             </span>
-            <span class="datetime-cell">
-              {{fileItem.modifiedDate | date:'dd.MM.yyyy HH:mm'}}
-            </span>
-          </span>
-      </mat-list-item>
-    }
-  </mat-list>
+        </mat-list-item>
+      }
+    </mat-list>
 
-  @if(files.length === 0) {
-    <div class="row nodata-cell">
-      <mat-icon class="material-symbols-outlined">
-        search_off
-      </mat-icon>
-      No data
-    </div>
-  } @else {
-    <div class="row row-summary mdc-list-item">
-      <div class="name-cell">
-        <strong>Total</strong>
+    @if(files.length === 0) {
+      <div class="row nodata-cell">
+        <mat-icon class="material-symbols-outlined">
+          search_off
+        </mat-icon>
+        No data
       </div>
-      <div class="amount-cell">
-        <strong>{{files.length | number}}</strong>
+    } @else {
+      <div class="row row-summary mdc-list-item">
+        <div class="name-cell">
+          <strong>Total</strong>
+        </div>
+        <div class="amount-cell">
+          <strong>{{files.length | number}}</strong>
+        </div>
       </div>
-    </div>
-  }
+    }
+
+    @if (loading) {
+      <div class="loading-overlay">
+        <app-core-loading-progress [loading]="loading"></app-core-loading-progress>
+      </div>
+    }
+  </div>
 
 </mat-dialog-content>
 <mat-dialog-actions>
