@@ -20,3 +20,28 @@
   flex-shrink: 0;
   justify-content: flex-end;
 }
+
+.amount-cell {
+  margin-left: 1rem;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: flex-end;
+}
+
+.row-summary {
+  font: var(--mat-sys-body-large);
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--mat-sys-background);
+  border-top: 2px solid var(--mat-sys-primary-container);
+  padding-top: 0.5rem;
+}
+
+.nodata-cell {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+}
+

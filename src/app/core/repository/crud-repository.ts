@@ -62,6 +62,7 @@ export class CrudRepository<T extends CommonEntity> {
   private route(action: CrudAction<T>): Observable<HttpResponse<T>> {
     switch (action.type) {
       case CrudActionType.Insert:
+        console.debug(`Posting response with action: ${JSON.stringify(action)}`);
         return this.dataSource.postResponse(this.resourceName, action.payload);
       case CrudActionType.Update:
         // id is always populated for an Update payload (an existing entity is

@@ -22,8 +22,8 @@ export class MessagesService {
     // resetMessage() passes undefined -> nothing to show, and nothing recorded.
     if (message) {
       this.messages.push(message);
-      this.snackBar.open(message.messageText, '', {
-        duration: message.messageType === MessageType.MT_ERROR ? 7000 : 4000,
+      this.snackBar.open(message.messageText, message.action || '', {
+        duration: message.action ? 10000 : message.messageType === MessageType.MT_ERROR ? 7000 : 4000,
         panelClass: this.panelClass(message.messageType),
         horizontalPosition: 'center',
         verticalPosition: 'bottom'

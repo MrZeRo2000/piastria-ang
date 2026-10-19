@@ -139,11 +139,12 @@ a {
 // --- App message snackbars (MessagesService sets these as panelClass) ---
 // The snackbar renders in the CDK overlay (outside any component), so global.
 @mixin app-snackbar($bg, $fg) {
-  .mat-mdc-snackbar-surface {
-    background-color: $bg !important;
-  }
-  .mat-mdc-snackbar-surface .mat-mdc-snack-bar-label {
-    color: $fg;
+  // Material's snackbar tokens; the doubled class beats its own single-class
+  // token declaration on the container.
+  &.mat-mdc-snack-bar-container {
+    --mat-snack-bar-container-color: #{$bg};
+    --mat-snack-bar-supporting-text-color: #{$fg};
+    --mat-snack-bar-button-color: #{$fg};
   }
 }
 

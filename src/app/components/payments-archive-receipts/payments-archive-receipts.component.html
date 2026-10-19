@@ -15,6 +15,25 @@
       </mat-list-item>
     }
   </mat-list>
+
+  @if(files.length === 0) {
+    <div class="row nodata-cell">
+      <mat-icon class="material-symbols-outlined">
+        search_off
+      </mat-icon>
+      No data
+    </div>
+  } @else {
+    <div class="row row-summary mdc-list-item">
+      <div class="name-cell">
+        <strong>Total</strong>
+      </div>
+      <div class="amount-cell">
+        <strong>{{files.length | number}}</strong>
+      </div>
+    </div>
+  }
+
 </mat-dialog-content>
 <mat-dialog-actions>
   <button matButton="filled" class="confirm-button" (click)="archiveOnClick()" [disabled]="loading">Archive</button>

@@ -7,7 +7,7 @@ export enum MessageType {
 }
 
 export class Message {
-  constructor(public messageType: MessageType, public messageText: string, public messageSource?: string) {
+  constructor(public messageType: MessageType, public messageText: string, public messageSource?: string, public action?: string) {
   }
 }
 

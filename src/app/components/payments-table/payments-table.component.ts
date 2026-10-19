@@ -502,6 +502,8 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
   archiveReceiptsOnClick(event: Event, receiptFiles: ReceiptFileInfo[]): void {
     event.preventDefault();
     const dialogRef = this.importDialog.open(PaymentsArchiveReceiptsComponent, {
+      width: '700px',
+      maxWidth: '90vw', // default is 80vw, raise it if needed
       data: {
         paymentObject: this.paymentObject()!,
         receiptFiles,

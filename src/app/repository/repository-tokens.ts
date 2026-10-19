@@ -90,7 +90,7 @@ export const ARCHIVE_RECEIPT_CRUD_REPOSITORY = new InjectionToken<CrudRepository
   'ARCHIVE_RECEIPT_CRUD_REPOSITORY',
   {
     providedIn: 'root',
-    factory: () => new CrudRepository(inject(RestDataSource), inject(MessagesService), 'payments:archive_receipt1')
+    factory: () => new CrudRepository(inject(RestDataSource), inject(MessagesService), 'payments:archive_receipt')
   });
 
 export const PAYMENT_OBJECT_TOTALS_READ_REPOSITORY = new InjectionToken<ReadRepository<PaymentObjectTotals>>(

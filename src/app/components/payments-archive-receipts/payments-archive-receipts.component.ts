@@ -14,11 +14,13 @@ import {MatList, MatListItem} from "@angular/material/list";
 import {ReceiptFileInfo} from "../../model/receipt-file-info";
 import {PaymentObject} from "../../model/payment-object";
 import {ARCHIVE_RECEIPT_CRUD_REPOSITORY} from "../../repository/repository-tokens";
-import {CrudActionType, CrudStatus} from "../../core/repository/crud-repository";
+import {CrudStatus} from "../../core/repository/crud-repository";
 import {tap} from "rxjs";
 import {MessagesService} from "../../messages/messages.service";
 import {SuccessMessage} from "../../messages/message.model";
 import {toSignal} from "@angular/core/rxjs-interop";
+import {MatIcon} from "@angular/material/icon";
+import {HttpParams} from "@angular/common/http";
 
 @Component({
   selector: 'app-payments-archive-receipts',
@@ -30,7 +32,9 @@ import {toSignal} from "@angular/core/rxjs-interop";
     MatDialogTitle,
     MatList,
     MatListItem,
-    DatePipe
+    DatePipe,
+    DecimalPipe,
+    MatIcon
   ],
   templateUrl: './payments-archive-receipts.component.html',
   styleUrl: './payments-archive-receipts.component.scss',
@@ -53,7 +57,9 @@ export class PaymentsArchiveReceiptsComponent {
     tap(archiveResult => {
       this.archiveLoadingSignal.set(false)
       if (archiveResult.status == CrudStatus.Success) {
-        this.messagesService.reportMessage(new SuccessMessage(archiveResult.data!.message!))
+        const message = new SuccessMessage(archiveResult.data!.message! + " created successfully.");
+        message.action = 'Ok'
+        this.messagesService.reportMessage(message)
         this.dialogRef.close();
       }
     })
@@ -62,6 +68,7 @@ export class PaymentsArchiveReceiptsComponent {
 
   archiveOnClick(): void {
     this.archiveLoadingSignal.set(true);
-    this.archiveRepository.execute({type: CrudActionType.Insert, payload: {}})
+    this.archiveRepository.postFormData(new HttpParams()
+      .append('paymentObjectId', this.data!.paymentObject!.id!.toString(10)));
   }
 }
