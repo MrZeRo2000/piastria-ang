@@ -1,6 +1,6 @@
 {
   "name": "piastria-ang",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "backendVersion": "0.11.5",
   "scripts": {
     "ng": "ng",

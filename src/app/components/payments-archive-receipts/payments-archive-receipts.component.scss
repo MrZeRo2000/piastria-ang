@@ -45,19 +45,3 @@
   justify-content: center;
 }
 
-
-// Wraps the list + summary so the overlay covers exactly their area: the list
-// keeps its size while archiving instead of being replaced by a small spinner.
-.list-container {
-  position: relative;
-}
-
-.loading-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: color-mix(in srgb, var(--mat-sys-surface) 70%, transparent);
-}
