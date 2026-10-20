@@ -1,13 +1,14 @@
 <div class="app-title-medium app-info">Version: {{version}}
-  @if (readRepository.loadingSignal()) {
-    ...
+  @if (versionStatus(); as status) {
+    <mat-chip
+      class="version-chip"
+      [ngClass]="{'version-chip-warning': status.minorDifference, 'version-chip-error': status.majorDifference}">
+      {{status.backendVersion}}
+    </mat-chip>
   } @else {
-    @if (versionStatus(); as status) {
-      <mat-chip
-        class="version-chip"
-        [ngClass]="{'version-chip-warning': status.minorDifference, 'version-chip-error': status.majorDifference}">
-        {{status.backendVersion}}
-      </mat-chip>
-    }
+    <mat-chip
+      class="version-chip">
+      ...
+    </mat-chip>
   }
 </div>

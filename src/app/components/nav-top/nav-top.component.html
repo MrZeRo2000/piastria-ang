@@ -1,4 +1,4 @@
 <mat-toolbar class="nav-top">
-  <a mat-button routerLink="" routerLinkActive="nav-top__active" [routerLinkActiveOptions]="{exact: true}">Home</a>
-  <a mat-button routerLink="/settings" routerLinkActive="nav-top__active">Settings</a>
+  <a mat-button routerLink="" routerLinkActive="nav-top__active" [routerLinkActiveOptions]="{exact: true}" [disabled]="appInfoUnavailableSignal()">Home</a>
+  <a mat-button routerLink="/settings" routerLinkActive="nav-top__active" [disabled]="appInfoUnavailableSignal()">Settings</a>
 </mat-toolbar>
