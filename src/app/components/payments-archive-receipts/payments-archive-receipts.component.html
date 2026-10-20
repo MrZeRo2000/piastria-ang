@@ -36,6 +36,8 @@
 
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button matButton="filled" class="confirm-button" (click)="archiveOnClick()" [disabled]="loading">Archive</button>
+  @if(files.length) {
+    <button matButton="filled" class="confirm-button" (click)="archiveOnClick()" [disabled]="loading">Archive</button>
+  }
   <button matButton mat-dialog-close>Close</button>
 </mat-dialog-actions>
