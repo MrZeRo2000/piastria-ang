@@ -32,10 +32,10 @@
     } @else {
       <div class="row row-summary mdc-list-item">
         <div class="description-cell">
-          <strong>Total</strong>
+          <strong>Total: {{importTotals().count}} / {{dataTotals().count}}</strong>
         </div>
         <div class="amount-cell">
-          <strong>{{importTotals() | number : '1.2-2'}}</strong>
+          <strong>{{importTotals().amount | number : '1.2-2'}} / {{dataTotals().amount | number : '1.2-2'}} </strong>
         </div>
       </div>
     }
@@ -45,7 +45,7 @@
 <mat-dialog-actions>
   @if(!loading) {
     @if(data.length > 0) {
-      <button matButton="filled" class="confirm-button" [disabled]="importTotals() === 0" (click)="importOnClick()">Import</button>
+      <button matButton="filled" class="confirm-button" [disabled]="importTotals().amount === 0" (click)="importOnClick()">Import</button>
     }
     <button matButton mat-dialog-close>Close</button>
   }

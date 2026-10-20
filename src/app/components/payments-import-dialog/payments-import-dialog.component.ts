@@ -34,6 +34,11 @@ interface ImportDataModel {
   items: ImportDataItem[]
 }
 
+interface ImportStats {
+  count: number
+  amount: number
+}
+
 @Component({
   selector: 'app-payments-import-dialog',
   imports: [
@@ -78,11 +83,22 @@ export class PaymentsImportDialogComponent implements OnInit {
     }),
   ), {initialValue: []})
 
+  private calcStats(data: ImportDataItem[]): ImportStats {
+    return data.reduce(
+      (a, v) => {
+        return {count: a.count +1, amount: a.amount + v.scan.scanValue}
+      }, {count: 0, amount: 0} as ImportStats)
+  }
+
   importModel = signal<ImportDataModel>({items: []})
   importForm = form(this.importModel)
+
+
   importTotals = computed(() =>
-    this.importForm().value().items.reduce((a, v) => a + v.scan.scanValue, 0)
+    this.calcStats(this.importForm().value().items)
   )
+
+  dataTotals = computed(() => this.calcStats(this.dataSignal()))
 
   importSubject = new Subject<PaymentImport[]>()
 
