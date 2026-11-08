@@ -8,7 +8,7 @@
     @if (data.length > 0) {
       <mat-selection-list [formField]="importForm.items">
         @for (importItem of data; track importItem) {
-          <mat-list-option [value]="importItem" togglePosition="before" [selected]="!importItem.scan.disabled" [disabled]="importItem.scan.disabled">
+          <mat-list-option [value]="importItem" togglePosition="before" [disabled]="importItem.scan.disabled">
             <span class="row">
               <span class=description-cell>
                 {{importItem.scan.productName}}
