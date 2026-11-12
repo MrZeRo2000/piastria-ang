@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PaymentsTableComponent } from './payments-table.component';
+import {PaymentObject} from '../../model/payment-object';
 import {RestUrlEnv} from '../../config/configuration';
 import {RestDataSource} from '../../data-source/rest-data-source';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -21,6 +22,7 @@ describe('PaymentsTableComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(PaymentsTableComponent);
+    fixture.componentRef.setInput('paymentObject', new PaymentObject(1, 'test'));
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

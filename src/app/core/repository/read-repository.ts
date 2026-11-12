@@ -30,18 +30,54 @@ class MessageProcessor {
 
 export type ItemMapper<T> = (raw: unknown) => T;
 
-/** Mapper that coerces the named fields from ISO date strings to Date. */
-export function withDates<T>(...dateKeys: (keyof T)[]): ItemMapper<T> {
-  return (raw: unknown) => {
-    const item = {...(raw as T)};
-    for (const key of dateKeys) {
+/** Element type if V is an array, otherwise V itself. */
+type Nested<V> = NonNullable<V> extends readonly (infer E)[] ? E : NonNullable<V>;
+
+/** Date fields of nested properties (object or array of objects), keyed by property name. */
+type NestedDateKeys<T> = { [K in keyof T]?: (keyof Nested<T[K]>)[] };
+
+/**
+ * Mapper that coerces date fields from ISO date strings to Date.
+ * Each argument is either:
+ *  - a key of T: that field is converted;
+ *  - an object `{ property: [dateKeys] }`: the listed fields are converted on the
+ *    nested object, or on every element if the property is an array.
+ *
+ * Usage:
+ *   withDates<ReceiptFileInfo>('modifiedDate')
+ *   withDates<ReceiptFileFolderInfo>({ fileList: ['modifiedDate'] })
+ */
+export function withDates<T>(...specs: (keyof T | NestedDateKeys<T>)[]): ItemMapper<T> {
+  const convert = (raw: unknown, keys: PropertyKey[]): unknown => {
+    const item = {...(raw as Record<PropertyKey, unknown>)};
+    for (const key of keys) {
       if (item[key]) {
-        item[key] = new Date(item[key] as string) as T[typeof key];
+        item[key] = new Date(item[key] as string);
       }
     }
     return item;
   };
+
+  return (raw: unknown) => {
+    const item = {...(raw as Record<PropertyKey, unknown>)};
+    for (const spec of specs) {
+      if (typeof spec === 'object') {
+        for (const [property, keys] of Object.entries(spec as Record<string, PropertyKey[]>)) {
+          const value = item[property];
+          if (Array.isArray(value)) {
+            item[property] = value.map(v => convert(v, keys));
+          } else if (value) {
+            item[property] = convert(value, keys);
+          }
+        }
+      } else if (item[spec as PropertyKey]) {
+        item[spec as PropertyKey] = new Date(item[spec as PropertyKey] as string);
+      }
+    }
+    return item as T;
+  };
 }
+
 
 export class ReadRepository<T> {
   constructor(

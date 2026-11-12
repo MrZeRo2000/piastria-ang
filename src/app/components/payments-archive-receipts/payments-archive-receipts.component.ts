@@ -1,4 +1,4 @@
-import {Component, inject, Input, signal} from '@angular/core';
+import {Component, computed, inject, OnInit, signal} from '@angular/core';
 import {DatePipe, DecimalPipe} from "@angular/common";
 import {LoadingProgressComponent} from "../../core/components/loading-progress/loading-progress.component";
 import {MatButton} from "@angular/material/button";
@@ -11,9 +11,8 @@ import {
   MatDialogTitle
 } from "@angular/material/dialog";
 import {MatList, MatListItem} from "@angular/material/list";
-import {ReceiptFileInfo} from "../../model/receipt-file-info";
 import {PaymentObject} from "../../model/payment-object";
-import {ARCHIVE_RECEIPT_CRUD_REPOSITORY} from "../../repository/repository-tokens";
+import {ARCHIVE_RECEIPT_CRUD_REPOSITORY, RECEIPT_FILES_READ_REPOSITORY} from "../../repository/repository-tokens";
 import {CrudStatus} from "../../core/repository/crud-repository";
 import {tap} from "rxjs";
 import {MessagesService} from "../../messages/messages.service";
@@ -34,23 +33,35 @@ import {HttpParams} from "@angular/common/http";
     MatListItem,
     DatePipe,
     DecimalPipe,
-    MatIcon
+    MatIcon,
+    LoadingProgressComponent
   ],
   templateUrl: './payments-archive-receipts.component.html',
   styleUrl: './payments-archive-receipts.component.scss',
 })
-export class PaymentsArchiveReceiptsComponent {
+export class PaymentsArchiveReceiptsComponent implements OnInit {
   private readonly dialogRef = inject(MatDialogRef);
+  private receiptRepository = inject(RECEIPT_FILES_READ_REPOSITORY)
   readonly archiveRepository = inject(ARCHIVE_RECEIPT_CRUD_REPOSITORY);
   private readonly messagesService: MessagesService = inject(MessagesService)
 
-  readonly data = inject<{paymentObject: PaymentObject, receiptFiles: ReceiptFileInfo[]}>(MAT_DIALOG_DATA);
-  readonly files = this.data.receiptFiles;
+  readonly data = inject<{paymentObject: PaymentObject}>(MAT_DIALOG_DATA);
+  readonly receiptData = computed(() => this.receiptRepository.dataSignal()[0])
+  readonly fileFolder = computed(() => this.receiptData()?.folderName)
+  readonly files = computed(() => this.receiptData()?.fileList || [])
 
+  loadingSignal = computed(() => this.archiveLoadingSignal() || this.receiptRepository.loadingSignal())
   archiveLoadingSignal = signal(false)
 
   constructor() {
     toSignal(this.archiveAction$)
+  }
+
+  ngOnInit(): void {
+    this.receiptRepository.loadData({
+      params: new HttpParams()
+        .append('paymentObjectId', this.data.paymentObject.id!.toString())
+    })
   }
 
   archiveAction$ = this.archiveRepository.crudAction$.pipe(
@@ -63,7 +74,6 @@ export class PaymentsArchiveReceiptsComponent {
         this.dialogRef.close();
       }
     })
-
   );
 
   archiveOnClick(): void {

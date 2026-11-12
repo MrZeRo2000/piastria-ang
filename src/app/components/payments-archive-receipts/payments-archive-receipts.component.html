@@ -1,42 +1,44 @@
-@let loading = archiveLoadingSignal();
+@let loading = loadingSignal();
 <h2 mat-dialog-title>Archive receipts</h2>
 <mat-dialog-content>
-  <mat-list>
-    @for (fileItem of files; track fileItem) {
-      <mat-list-item>
-          <span class="row">
-            <span class=name-cell>
-              {{fileItem.fileName}}
+  <app-core-loading-progress [loading]="loading"></app-core-loading-progress>
+  @if (!loading) {
+    <mat-list>
+      @for (fileItem of files(); track fileItem) {
+        <mat-list-item>
+            <span class="row">
+              <span class=name-cell>
+                {{fileItem.fileName}}
+              </span>
+              <span class="datetime-cell">
+                {{fileItem.modifiedDate | date:'dd.MM.yyyy HH:mm'}}
+              </span>
             </span>
-            <span class="datetime-cell">
-              {{fileItem.modifiedDate | date:'dd.MM.yyyy HH:mm'}}
-            </span>
-          </span>
-      </mat-list-item>
+        </mat-list-item>
+      }
+    </mat-list>
+
+    @if(files().length === 0) {
+      <div class="row nodata-cell">
+        <mat-icon class="material-symbols-outlined">
+          search_off
+        </mat-icon>
+        No data in {{fileFolder()}}
+      </div>
+    } @else {
+      <div class="row row-summary mdc-list-item">
+        <div class="name-cell">
+          <strong>Total</strong>
+        </div>
+        <div class="amount-cell">
+          <strong>{{files().length | number}}</strong>
+        </div>
+      </div>
     }
-  </mat-list>
-
-  @if(files.length === 0) {
-    <div class="row nodata-cell">
-      <mat-icon class="material-symbols-outlined">
-        search_off
-      </mat-icon>
-      No data
-    </div>
-  } @else {
-    <div class="row row-summary mdc-list-item">
-      <div class="name-cell">
-        <strong>Total</strong>
-      </div>
-      <div class="amount-cell">
-        <strong>{{files.length | number}}</strong>
-      </div>
-    </div>
   }
-
 </mat-dialog-content>
 <mat-dialog-actions>
-  @if(files.length) {
+  @if(files().length > 0) {
     <button matButton="filled" class="confirm-button" (click)="archiveOnClick()" [disabled]="loading">Archive</button>
   }
   <button matButton mat-dialog-close>Close</button>

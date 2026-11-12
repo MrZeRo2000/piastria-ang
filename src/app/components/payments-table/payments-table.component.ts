@@ -1,4 +1,4 @@
-import {Component, computed, effect, ElementRef, inject, input, OnInit, signal, viewChildren} from '@angular/core';
+import {Component, computed, effect, ElementRef, inject, input, signal, viewChildren} from '@angular/core';
 import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {catchError, of, Subject, switchMap, tap} from 'rxjs';
 import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
@@ -35,7 +35,7 @@ import {LoadingProgressComponent} from '../../core/components/loading-progress/l
 import {
   PAYMENT_CRUD_REPOSITORY,
   PAYMENT_DUPLICATE_PERIOD_REPOSITORY,
-  PAYMENT_REFS_READ_REPOSITORY, RECEIPT_FILES_READ_REPOSITORY
+  PAYMENT_REFS_READ_REPOSITORY
 } from '../../repository/repository-tokens';
 import {MatDialog} from "@angular/material/dialog";
 import {PaymentsImportDialogComponent} from "../payments-import-dialog/payments-import-dialog.component";
@@ -48,7 +48,6 @@ import {ErrorMessage} from "../../messages/message.model";
 import {CdkDragHandle, CdkDropList} from "@angular/cdk/drag-drop";
 import {DragGripComponent} from "../../core/components/drag-grip/drag-grip.component";
 import {CommonEntity} from "../../core/entity/common-entity";
-import {ReceiptFileInfo} from "../../model/receipt-file-info";
 import {PaymentsArchiveReceiptsComponent} from "../payments-archive-receipts/payments-archive-receipts.component";
 
 enum InlineControl {
@@ -89,11 +88,10 @@ enum InlineControl {
   providers: [AmountPipe],
   styleUrls: ['./payments-table.component.scss']
 })
-export class PaymentsTableComponent extends CommonEditableTableComponent<PaymentRefs, Payment> implements OnInit {
+export class PaymentsTableComponent extends CommonEditableTableComponent<PaymentRefs, Payment> {
   private fb = inject(FormBuilder)
   private amountPipe = inject(AmountPipe)
   private duplicateRepository = inject(PAYMENT_DUPLICATE_PERIOD_REPOSITORY)
-  private receiptRepository = inject(RECEIPT_FILES_READ_REPOSITORY)
   private readonly dataSource: RestDataSource = inject(RestDataSource)
   private readonly messagesService: MessagesService = inject(MessagesService)
   readonly importDialog = inject(MatDialog);
@@ -252,7 +250,6 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
   )
 
   updateAmountSignal = toSignal(this.updateAmountAction$)
-  receiptFilesSignal = this.receiptRepository.dataSignal
 
   constructor() {
     super(
@@ -263,7 +260,7 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
 
     // Reload when the object/period inputs change, cancelling any open edit.
     effect(() => {
-      const id = this.paymentObject()!.id
+      const id = this.paymentObject()?.id
       const date = this.convertedPeriodDate();
       if (id && date) {
         this.onCancel();
@@ -301,7 +298,6 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
       console.log(`Update amount signal returned ${JSON.stringify(this.updateAmountSignal())}`)
     })
 
-
     this.inlineEditHandler.inputValidator = (item, controlName, value) => {
       if (controlName === InlineControl.ProductCounter) {
         const prevPeriodProductCounter = this.getPrevPeriodProductCounter(item);
@@ -333,15 +329,6 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
       //this.crudRepository.execute({type: CrudActionType.Patch, payload: {id: item.id, body: patchRequest}});
       this.updateAmountSubject.next({id: item.id!, body: patchRequest})
     };
-  }
-
-  ngOnInit() {
-    super.ngOnInit();
-
-    this.receiptRepository.loadData({
-      params: new HttpParams()
-        .append('paymentObjectId', this.paymentObject()!.id!.toString())
-    })
   }
 
   protected override loadRepositoryData(): void {
@@ -499,14 +486,13 @@ export class PaymentsTableComponent extends CommonEditableTableComponent<Payment
     });
   }
 
-  archiveReceiptsOnClick(event: Event, receiptFiles: ReceiptFileInfo[]): void {
+  archiveReceiptsOnClick(event: Event): void {
     event.preventDefault();
     const dialogRef = this.importDialog.open(PaymentsArchiveReceiptsComponent, {
       width: '700px',
       maxWidth: '90vw', // default is 80vw, raise it if needed
       data: {
-        paymentObject: this.paymentObject()!,
-        receiptFiles,
+        paymentObject: this.paymentObject()!
       },
       disableClose: true
     });
